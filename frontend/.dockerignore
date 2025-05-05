@@ -1,0 +1,22 @@
+# Ignore node modules and logs
+node_modules
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Ignore local build artifacts
+dist
+dist-ssr
+build
+
+# Ignore Vite/Next/.env configs that shouldn't be copied
+.env*
+.vscode
+.idea
+.DS_Store
+.cache
+.eslintcache
+*.tsbuildinfo
+*.local
