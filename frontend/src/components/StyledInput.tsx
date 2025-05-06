@@ -1,4 +1,4 @@
-import { OutlinedInput, FormControl, InputLabel, FormHelperText, } from '@mui/material';
+import { OutlinedInput, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import theme from '../styles/MaterialTheme';
 import { Controller, Control } from 'react-hook-form';
 import { Login } from '../types/AuthTypes';
@@ -14,7 +14,7 @@ const LabelSX = {
 const OutlinedInputSX = {
     '& input': {
         color: theme.palette.text.primary, // input text
-    }, // input text
+    },
     '& .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.palette.primary.dark, // default border
     },
