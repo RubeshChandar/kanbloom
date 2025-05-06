@@ -19,6 +19,7 @@ venv/
 db.sqlite3
 media/
 staticfiles/
+.venv
 
 # Migrations
 **/migrations/

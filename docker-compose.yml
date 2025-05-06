@@ -1,0 +1,13 @@
+name: Kanbloom
+
+services:
+  frontend:
+    build: ./frontend
+    container_name: React_Kanbloom
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    env_file:
+      - .env
