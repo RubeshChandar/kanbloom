@@ -33,17 +33,6 @@
 - SimpleJWT (Auth)
 - PostgreSQL
 - Redis (for ephemeral connection requests)
-- Optional: Django Channels (WebSocket), Celery (background tasks)
-
----
-
-## 🎨 Theme
-
-- Primary: `#3B4B5A` (Slate Blue)
-- Accent: `#C3FF00` (Neon Lime)
-- Highlight: `#9B5DE5` (Electric Purple)
-- Text: `#1C1C1E` (Charcoal), `#6B7280` (Muted Gray)
-- Background: `#F9FAFB` (Cloud White), `#ECEFF4` (Soft Gray)
 
 ---
 
@@ -58,6 +47,21 @@
 ---
 
 ## 📦 Installation (Dev)
+
+### 🔧 Using Docker Compose (Recommended)
+
+If you have Docker and Docker Compose installed, you can start the entire app with:
+
+```bash
+docker-compose up --build
+```
+
+Then access:
+
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8000/api/
+
+---
 
 ```bash
 # Backend
