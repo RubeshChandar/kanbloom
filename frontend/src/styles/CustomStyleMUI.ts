@@ -7,6 +7,6 @@ export const glassyCard: SxProps<Theme> = {
     border: '1px solid rgba(255, 255, 255, 0.2)',
     boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
     borderRadius: '16px',
-    p: 3,
+    p: 5,
     color: 'white'
 }

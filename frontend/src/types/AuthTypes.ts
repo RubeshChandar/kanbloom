@@ -7,3 +7,13 @@ export const LoginSchema = z.object({
 
 
 export type Login = z.infer<typeof LoginSchema>
+
+export const RegisterSchema = LoginSchema.extend({
+    email: z.string({ required_error: 'Email is required' }).email(),
+    confirmPassword: z.string({ required_error: 'Type your password again' })
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't have match",
+    path: ['confirmPassword']
+})
+
+export type Register = z.infer<typeof RegisterSchema>

@@ -1,7 +1,6 @@
 import { OutlinedInput, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import theme from '../styles/MaterialTheme';
-import { Controller, Control } from 'react-hook-form';
-import { Login } from '../types/AuthTypes';
+import { forwardRef } from 'react';
 
 
 const LabelSX = {
@@ -26,32 +25,26 @@ const OutlinedInputSX = {
     },
 }
 
-type Inputprops = {
-    fieldname: keyof Login,
-    control: Control<Login>,
+type InputProps = {
+    fieldname: string,
     type?: string,
+    error?: string;
+    endAdornment?: React.ReactNode;
 }
 
 
-export const StyledInput = ({ fieldname, control, type = "text" }: Inputprops) => {
-    return (
-        <Controller name={fieldname} control={control} render={({ field, fieldState }) => (
-            <FormControl error={!!fieldState.error}>
+export const AuthInput = forwardRef<HTMLInputElement, InputProps>(
+    ({ fieldname, error, type = "text", endAdornment, ...rest }, ref) => {
+        return (
+            <FormControl error={!!error}>
                 <InputLabel htmlFor={fieldname} sx={LabelSX}>
-                    {fieldname.toString().charAt(0).toUpperCase() + fieldname.slice(1)}
+                    {fieldname}
                 </InputLabel>
 
-                <OutlinedInput
-                    {...field}
-                    value={field.value ?? ''}
-                    label={fieldname}
-                    type={type}
-                    sx={OutlinedInputSX}
-                />
-                {!!fieldState.error && <FormHelperText id="component-error-text">{fieldState.error.message}</FormHelperText>}
+                <OutlinedInput label={fieldname} id={fieldname} type={type}
+                    inputRef={ref} sx={OutlinedInputSX}  {...rest} endAdornment={endAdornment} />
+                {!!error &&
+                    <FormHelperText>{error}</FormHelperText>}
             </FormControl>
-        )} />
-
-
-    )
-}
+        )
+    })

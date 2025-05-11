@@ -30,18 +30,17 @@ class UserProfile(models.Model):
         CustomUser, on_delete=models.CASCADE, related_name="user_profile")
     image = models.ImageField(
         upload_to=user_profile_photo_path, blank=True, null=True)
-    title = models.CharField(max_length=500,null=True, blank=True)
+    title = models.CharField(max_length=500, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    last_modified = models.DateField(auto_now=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "User Profile"
 
     def __str__(self):
         return f"{str(self.user.username).capitalize()}'s profile"
-    
+
     def delete(self, *args, **kwargs):
         if self.image:
             self.image.delete(save=False)
         super().delete(*args, **kwargs)
-
