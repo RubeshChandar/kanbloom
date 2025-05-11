@@ -30,7 +30,7 @@ const RegisterPage = () => {
 
         console.log(data)
         // Navigate back to login.
-        nav("/login")
+        nav("/login", { replace: true })
 
         dispatch(showSnackbar({
             message: 'Registration successfully done!',
