@@ -4,6 +4,7 @@ import MainLayout from "./layouts/MainLayout";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import GlobalSnackBar from "./components/GlobalSnackBar";
+import HomePage from "./pages/HomePage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         </Route>
 
         <Route element={<MainLayout />}>
+          <Route index element={<HomePage />} />
         </Route>
 
       </Routes>

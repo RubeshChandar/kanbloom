@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.db import connection
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -22,26 +23,22 @@ class CreateUserView(generics.CreateAPIView):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def all_users(request):
+def get_user_profile(request, pk):
+    if pk:
+        try:
+            userProf = get_object_or_404(UserProfile, user_id=pk)
+            res = UserProfileSerialiser(userProf, context={'request': request})
+            return Response(res.data)
+
+        except Exception as e:
+            return Response(
+                {
+                    'detail': "User not found based on ID",
+                    'exception': str(e)
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
     userProf = UserProfile.objects.all()
     res = UserProfileSerialiser(userProf, many=True)
     return Response(res.data)
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_user(request, pk):
-
-    try:
-        user = get_object_or_404(CustomUser, pk=pk)
-        res = UserSerialiser(user)
-        return Response(res.data)
-
-    except Exception as e:
-        return Response(
-            {
-                'detail': "User not found based on ID",
-                'exception': e
-            },
-            status=status.HTTP_404_NOT_FOUND
-        )

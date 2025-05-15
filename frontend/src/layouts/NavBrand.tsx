@@ -1,0 +1,30 @@
+import { NavLink } from "react-router-dom"
+import KanbloomLogo from '../assets/logo.png';
+import { Typography } from "@mui/material";
+
+const NavBrand = () => {
+    return (
+        <NavLink to='/'
+            className="flex flex-row items-center justify-center cursor-pointer">
+            <img
+                src={KanbloomLogo}
+                alt="Kanbloom Logo"
+                style={{
+                    height: '90px',
+                    display: 'block',
+                    margin: 'auto',
+                    transform: 'scale(10px)',
+                    filter: 'drop-shadow(0 0 5px teal)',
+                }}
+            />
+            <Typography variant='h4' padding={'10px 0px'}>
+                KANBLOOM
+                <Typography className='text-center'>
+                    Cultivate your workflow
+                </Typography>
+            </Typography>
+        </NavLink>
+    )
+}
+
+export default NavBrand

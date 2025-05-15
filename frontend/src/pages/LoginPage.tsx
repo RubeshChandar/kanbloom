@@ -1,4 +1,4 @@
-import { Button, IconButton, InputAdornment } from '@mui/material';
+import { Alert, AlertTitle, Button, IconButton, InputAdornment } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -8,6 +8,10 @@ import { useNavigate } from 'react-router-dom';
 import { AuthInput } from '../components/AuthInput';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import api from '../api';
+import { AuthToken } from '../types/AuthTypes';
+import axios from 'axios';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../types/Constants';
 
 const LoginPage = () => {
 
@@ -23,9 +27,24 @@ const LoginPage = () => {
     })
 
     const login: SubmitHandler<Login> = async (data) => {
-        console.log(data)
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setError("username", { message: "Already Taken" })
+
+        await api.post("user/token/", data)
+            .then(res => {
+                const tokens = res.data as AuthToken
+                console.log(tokens)
+                localStorage.setItem(ACCESS_TOKEN, tokens.access)
+                localStorage.setItem(REFRESH_TOKEN, tokens.refresh!)
+                nav("/")
+            })
+            .catch(error => {
+                if (axios.isAxiosError(error) && error.response) {
+                    const message = error.response.data.detail || "An Error Occured"
+                    setError("root", { message: message, type: `Error code ${error.response.status}` })
+                } else {
+                    setError("root", { message: "An Server Error Occured" })
+                }
+            })
+
     }
 
     const [showPassword, setShowPassword] = useState(false)
@@ -34,7 +53,7 @@ const LoginPage = () => {
         <form className="flex flex-col gap-7 min-w-88" onSubmit={handleSubmit(login)}>
             <div className="text-2xl text-primary font-bold text-center uppercase">Login</div>
 
-            <AuthInput fieldname='Username' {...register('username')} error={errors.username?.message} />
+            <AuthInput fieldname='E-mail' {...register('email')} error={errors.email?.message} />
             <AuthInput fieldname='Password' {...register('password')} error={errors.password?.message}
                 type={showPassword ? "text" : "password"}
                 endAdornment={
@@ -58,6 +77,12 @@ const LoginPage = () => {
                     <PersonAddIcon className='mr-3' />  Register as a new user
                 </Button>
             </div>
+            {errors.root &&
+                <Alert variant="filled" severity="error">
+                    <AlertTitle>{errors.root.type}</AlertTitle>
+                    {errors.root.message}
+                </Alert>
+            }
         </form>
     )
 }

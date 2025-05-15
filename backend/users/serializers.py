@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, UserProfile
+from .models import UserProfile
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -9,17 +9,19 @@ class UserSerialiser(serializers.ModelSerializer):
     username = serializers.CharField(max_length=70)
 
     class Meta:
-        model = CustomUser
-        fields = ['id', 'username', 'email', 'password']
-        extra_kwargs = {"password": {"write_only": True}}
+        model = User
+        fields = ['id', 'username', 'email', 'password', 'date_joined']
+        extra_kwargs = {"password": {"write_only": True},
+                        'date_joined': {"read_only": True}}
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['username'] = str(instance.username).capitalize()
+        rep['date_joined'] = instance.date_joined.strftime("%d/%m/%y")
         return rep
 
     def validate_username(self, value: str):
-        if User.objects.filter(username=value).exists():
+        if User.objects.filter(username__iexact=value).exists():
             raise serializers.ValidationError(
                 f"{value.capitalize()} is already being used! Please create a new one!!!")
 
@@ -38,13 +40,15 @@ class UserProfileSerialiser(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep['created_at'] = instance.created_at.strftime("%d/%m/%y %I:%M %p")
-        rep['last_modified'] = instance.last_modified\
-            .strftime("%d/%m/%y %I:%M %p")
+        request = self.context.get('request')
+
+        if request and (request.user.id == instance.user.id):
+            rep['created_at'] = instance.created_at
+            rep['last_modified'] = instance.last_modified
 
         return rep
 
     class Meta:
         model = UserProfile
-        exclude = []
-        read_only_fields = ['id', 'last_modified', 'created_at']
+        exclude = ['created_at', 'last_modified']
+        read_only_fields = ['id']

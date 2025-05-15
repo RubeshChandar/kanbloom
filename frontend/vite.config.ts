@@ -10,11 +10,15 @@ export default defineConfig(({ mode }) => {
 
   const port = parseInt(env.VITE_PORT) || 3000;
 
+
   return {
     plugins: [
       react(),
       tailwindcss(),
     ],
+    define: {
+      'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL),
+    },
     server: {
       port
     }
