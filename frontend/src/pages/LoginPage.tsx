@@ -4,7 +4,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Login, LoginSchema } from '../types/AuthTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthInput } from '../components/AuthInput';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -14,8 +14,10 @@ import axios from 'axios';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../types/Constants';
 
 const LoginPage = () => {
+    const location = useLocation();
+    const successUsername = location.state?.username || '';
 
-    const nav = useNavigate()
+    const nav = useNavigate();
 
     const {
         handleSubmit,
@@ -31,7 +33,6 @@ const LoginPage = () => {
         await api.post("user/token/", data)
             .then(res => {
                 const tokens = res.data as AuthToken
-                console.log(tokens)
                 localStorage.setItem(ACCESS_TOKEN, tokens.access)
                 localStorage.setItem(REFRESH_TOKEN, tokens.refresh!)
                 nav("/")
@@ -77,7 +78,14 @@ const LoginPage = () => {
                     <PersonAddIcon className='mr-3' />  Register as a new user
                 </Button>
             </div>
-            {errors.root &&
+            {
+                successUsername &&
+                <Alert variant="filled" severity="success">
+                    Use {successUsername}'s credentials to login!!!
+                </Alert>
+            }
+            {
+                errors.root &&
                 <Alert variant="filled" severity="error">
                     <AlertTitle>{errors.root.type}</AlertTitle>
                     {errors.root.message}

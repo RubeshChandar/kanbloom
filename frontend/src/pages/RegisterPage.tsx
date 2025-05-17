@@ -10,6 +10,9 @@ import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { showSnackbar } from '../state/SnackBarSlice';
+import api from '../api';
+import { AxiosError } from 'axios';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../types/Constants';
 
 
 const RegisterPage = () => {
@@ -19,6 +22,7 @@ const RegisterPage = () => {
     const {
         handleSubmit,
         register,
+        setError,
         formState: { errors }
     } = useForm<Register>({
         resolver: zodResolver(RegisterSchema)
@@ -27,15 +31,31 @@ const RegisterPage = () => {
     const dispatch = useDispatch()
 
     const RegisterUser: SubmitHandler<Register> = async (data) => {
+        localStorage.removeItem(REFRESH_TOKEN)
+        localStorage.removeItem(ACCESS_TOKEN)
 
-        console.log(data)
-        // Navigate back to login.
-        nav("/login", { replace: true })
+        api.post('user/register/', data)
+            .then(res => {
+                if (res.status == 201) {
+                    // Navigate back to login.
+                    nav("/login", {
+                        replace: true, state: {
+                            username: data.username
+                        }
+                    })
 
-        dispatch(showSnackbar({
-            message: 'Registration successfully done!',
-            severity: 'success',
-        }));
+                    dispatch(showSnackbar({
+                        message: 'Registration successfully done!',
+                        severity: 'success',
+                    }));
+                }
+            })
+            .catch((error: AxiosError) => {
+                const responseData = error.response?.data as { username?: string, email?: string };
+                setError('username', { message: responseData.username })
+                setError('email', { message: responseData.email })
+
+            })
     }
 
     return (

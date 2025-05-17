@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom"
-import KanbloomLogo from '../assets/logo.png';
+import KanbloomLogo from '@assets/logo.png';
 import { Typography } from "@mui/material";
 
 const NavBrand = () => {

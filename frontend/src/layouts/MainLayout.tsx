@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import ProtectedView from '../components/ProtectedView'
-import NavBar from './NavBar'
+import NavBar from './Nav/NavBar'
 
 const MainLayout = () => {
     return (

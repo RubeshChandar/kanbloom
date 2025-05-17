@@ -16,6 +16,11 @@ export default defineConfig(({ mode }) => {
       react(),
       tailwindcss(),
     ],
+    resolve: {
+      alias: {
+        '@assets': path.resolve(__dirname, './src/assets'),
+      },
+    },
     define: {
       'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL),
     },
