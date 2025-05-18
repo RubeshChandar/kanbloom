@@ -8,10 +8,11 @@ import FaceRetouchingNaturalIcon from '@mui/icons-material/FaceRetouchingNatural
 import { UserProfile } from '../../types/UserProfile';
 import theme from '../../styles/MaterialTheme';
 import api from '../../api';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../types/Constants';
+import { REFRESH_TOKEN } from '../../types/Constants';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { clearCurrentUser } from '../../state/UserProfile';
+import { ClearTokens } from '../../utils/TokenHandler';
 
 
 
@@ -42,8 +43,7 @@ const NavProfile = ({ userProfile }: { userProfile: UserProfile; }) => {
         }
 
         finally {
-            localStorage.removeItem(REFRESH_TOKEN);
-            localStorage.removeItem(ACCESS_TOKEN);
+            ClearTokens()
             dispatch(clearCurrentUser())
             nav("/login");
         }

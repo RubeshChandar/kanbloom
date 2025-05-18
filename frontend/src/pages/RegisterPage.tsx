@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { showSnackbar } from '../state/SnackBarSlice';
 import api from '../api';
 import { AxiosError } from 'axios';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../types/Constants';
+import { ClearTokens } from '../utils/TokenHandler';
 
 
 const RegisterPage = () => {
@@ -31,9 +31,7 @@ const RegisterPage = () => {
     const dispatch = useDispatch()
 
     const RegisterUser: SubmitHandler<Register> = async (data) => {
-        localStorage.removeItem(REFRESH_TOKEN)
-        localStorage.removeItem(ACCESS_TOKEN)
-
+        ClearTokens();
         api.post('user/register/', data)
             .then(res => {
                 if (res.status == 201) {
@@ -57,7 +55,6 @@ const RegisterPage = () => {
 
             })
     }
-
     return (
         <form className="flex flex-col gap-7 min-w-88" onSubmit={handleSubmit(RegisterUser)}>
             <div className="text-2xl text-primary font-bold text-center uppercase">Register</div>

@@ -8,6 +8,7 @@ import { DecodedJWT } from "../types/AuthTypes";
 import { useDispatch } from "react-redux";
 import { fetchCurrentUserProfile } from "../state/UserProfile";
 import { AppDispatch } from "../state/store";
+import { ClearTokens } from "../utils/TokenHandler";
 
 const ProtectedView = ({ children }: { children: React.ReactNode }) => {
     const [isAuthorised, setIsAuthorised] = useState<boolean | null>(null);
@@ -56,6 +57,7 @@ const ProtectedView = ({ children }: { children: React.ReactNode }) => {
         }
         catch (error) {
             console.log(error)
+            ClearTokens()
             setIsAuthorised(false)
         }
     }

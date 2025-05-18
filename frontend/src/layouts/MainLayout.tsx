@@ -7,7 +7,9 @@ const MainLayout = () => {
         <ProtectedView>
             <main>
                 <NavBar />
-                <Outlet></Outlet>
+                <div className="mt-8 px-5">
+                    <Outlet></Outlet>
+                </div>
             </main>
         </ProtectedView>
     )

@@ -19,11 +19,11 @@ const NavBrand = () => {
             />
             <Typography variant='h4' padding={'10px 0px'}>
                 KANBLOOM
-                <Typography className='text-center'>
+                <Typography className='text-center text-teal-400 text-[20px]'>
                     Cultivate your workflow
                 </Typography>
             </Typography>
-        </NavLink>
+        </NavLink >
     )
 }
 

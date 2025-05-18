@@ -11,7 +11,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import api from '../api';
 import { AuthToken } from '../types/AuthTypes';
 import axios from 'axios';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../types/Constants';
+import { SetTokens } from '../utils/TokenHandler';
 
 const LoginPage = () => {
     const location = useLocation();
@@ -33,13 +33,24 @@ const LoginPage = () => {
         await api.post("user/token/", data)
             .then(res => {
                 const tokens = res.data as AuthToken
-                localStorage.setItem(ACCESS_TOKEN, tokens.access)
-                localStorage.setItem(REFRESH_TOKEN, tokens.refresh!)
+                SetTokens(tokens)
                 nav("/")
             })
             .catch(error => {
                 if (axios.isAxiosError(error) && error.response) {
-                    const message = error.response.data.detail || "An Error Occured"
+
+                    let message = "";
+
+                    if (error.status === 401) {
+                        message = "Invalid email or password. Please try again.";
+                    } else if (error.status === 500) {
+                        message = "Server error. Please try again later.";
+                    } else if (error.response && error.response.data.detail) {
+                        message = error.response.data.detail;
+                    } else {
+                        message = "An unexpected error occurred. Please try again.";
+                    }
+
                     setError("root", { message: message, type: `Error code ${error.response.status}` })
                 } else {
                     setError("root", { message: "An Server Error Occured" })

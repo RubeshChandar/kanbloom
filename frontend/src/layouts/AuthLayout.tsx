@@ -6,7 +6,6 @@ import { REFRESH_TOKEN } from '../types/Constants';
 import { useEffect, useState } from 'react';
 
 
-
 const AuthLayout = () => {
     const [isTokenValid, setIsTokenValid] = useState(false);
 
@@ -15,6 +14,7 @@ const AuthLayout = () => {
 
         if (token) {
             const decodedToken = jwtDecode(token)
+            console.log(decodedToken)
             setIsTokenValid(!(decodedToken.exp! < Date.now() / 1000))
         }
     }, [])
