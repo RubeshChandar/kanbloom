@@ -7,8 +7,8 @@ class CustomUser(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=100, unique=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
         return f"{self.username.capitalize()}"
@@ -20,16 +20,16 @@ class CustomUser(AbstractUser):
 
 
 def user_profile_photo_path(instance, filename):
-    ext = filename.split('.')[-1]
+    ext = filename.split(".")[-1]
     return f"profile_pictures/{instance.user.username}.{ext}"
 
 
 class UserProfile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(
-        CustomUser, on_delete=models.CASCADE, related_name="user_profile")
-    image = models.ImageField(
-        upload_to=user_profile_photo_path, blank=True, null=True)
+        CustomUser, on_delete=models.CASCADE, related_name="user_profile"
+    )
+    image = models.ImageField(upload_to=user_profile_photo_path, blank=True, null=True)
     title = models.CharField(max_length=500, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)

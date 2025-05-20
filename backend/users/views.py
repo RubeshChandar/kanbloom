@@ -21,22 +21,19 @@ class CreateUserView(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_user_profile(request, pk):
     if pk:
         try:
             userProf = get_object_or_404(UserProfile, user_id=pk)
-            res = UserProfileSerialiser(userProf, context={'request': request})
+            res = UserProfileSerialiser(userProf, context={"request": request})
             return Response(res.data)
 
         except Exception as e:
             return Response(
-                {
-                    'detail': "User not found based on ID",
-                    'exception': str(e)
-                },
-                status=status.HTTP_404_NOT_FOUND
+                {"detail": "User not found based on ID", "exception": str(e)},
+                status=status.HTTP_404_NOT_FOUND,
             )
 
     userProf = UserProfile.objects.all()

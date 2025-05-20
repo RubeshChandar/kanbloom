@@ -8,7 +8,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    readonly_fields = ('created_at', 'last_modified')
+    readonly_fields = ("created_at", "last_modified")
 
 
 admin.site.register(CustomUser, UserAdmin)
