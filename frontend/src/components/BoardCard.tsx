@@ -1,13 +1,13 @@
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import LinearProgressWithLabel from "./LinearProgressWithLabel"
-import { TBoardCard } from '../types/BoardTypes';
+import { TaskStatusLabel, TBoardCard } from '../types/BoardTypes';
 
 const BoardCard = ({ board }: { board: TBoardCard }) => {
 
     let totalTask = 0;
 
-    board.taskStatus.map((task) => totalTask = totalTask + task.count)
+    board.taskStatus?.map((task) => totalTask = totalTask + task.count)
 
     return (
         <div className="flex flex-col my-6 bg-neon/10 border hover:border-neon border-white p-5 rounded-xl w-100">
@@ -25,11 +25,11 @@ const BoardCard = ({ board }: { board: TBoardCard }) => {
                     </thead>
                     <tbody>
                         {
-                            board.taskStatus.map((taskStatus) => {
+                            board.taskStatus?.map((taskStatus) => {
                                 const progress = totalTask > 0 ? Math.round((taskStatus.count / totalTask) * 100) : 0;
                                 return (
                                     <tr key={taskStatus.status}>
-                                        <td className='font-bold uppercase'>{taskStatus.status}</td>
+                                        <td className='font-bold uppercase'>{TaskStatusLabel[taskStatus.status]}</td>
                                         <td className='text-center'>
                                             <LinearProgressWithLabel value={progress} />
                                         </td>
