@@ -28,6 +28,9 @@ class Board(BaseModel):
     def __str__(self):
         return self.name.capitalize()
 
+    class Meta:
+        ordering = ["-last_modified"]
+
 
 class Task(BaseModel):
     class Status(models.TextChoices):

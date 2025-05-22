@@ -43,12 +43,12 @@ class AllBoardsSerializer(serializers.ModelSerializer):
         hours = minutes // 60
         days = diff.days
 
-        if seconds < 60:
+        if seconds < 120:
             return "Just now"
         elif minutes < 60:
             return f"{int(minutes)} minutes ago"
         elif hours < 24:
-            return f"{int(hours)} hours ago"
+            return f"{int(hours)} hour{'s' if int(hours) != 1 else ''} ago"
         elif days == 1:
             return "Yesterday"
         elif days < 7:

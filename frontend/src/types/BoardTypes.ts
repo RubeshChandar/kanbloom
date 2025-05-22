@@ -12,12 +12,19 @@ export const TaskStatusLabel: Record<TaskStatus, string> = {
     [TaskStatus.DONE]: "Done",
 };
 
+export type ShortendUser = {
+    id: string,
+    name: string,
+    imageURL: string
+}
+
 
 export type TBoardCard = {
     slug: string,
     name: string,
     taskStatus?: { status: TaskStatus, count: number }[],
-    members: { id?: string, name: string, imageURL: string }[],
+    members: ShortendUser[],
+    owned_by: ShortendUser,
     lastUpdated: string,
     description?: string
 }

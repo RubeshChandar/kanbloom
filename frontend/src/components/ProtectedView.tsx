@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { fetchCurrentUserProfile } from "../state/UserProfile";
 import { AppDispatch } from "../state/store";
 import { ClearTokens } from "../utils/TokenHandler";
+import axios from "axios";
 
 const ProtectedView = ({ children }: { children: React.ReactNode }) => {
     const [isAuthorised, setIsAuthorised] = useState<boolean | null>(null);
@@ -56,9 +57,12 @@ const ProtectedView = ({ children }: { children: React.ReactNode }) => {
             }
         }
         catch (error) {
-            console.log(error)
-            ClearTokens()
-            setIsAuthorised(false)
+            if (axios.isAxiosError(error) && error.response?.status === 401) {
+                ClearTokens();
+            } else {
+                console.warn("Refresh failed but token might still be valid:", error);
+            }
+            setIsAuthorised(false);
         }
     }
 

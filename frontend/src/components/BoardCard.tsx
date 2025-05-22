@@ -2,19 +2,38 @@ import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import LinearProgressWithLabel from "./LinearProgressWithLabel"
 import { TaskStatusLabel, TBoardCard } from '../types/BoardTypes';
+import { Chip, Tooltip } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { RootState } from '../state/store';
+
 
 const BoardCard = ({ board }: { board: TBoardCard }) => {
 
     let totalTask = 0;
+    const { currentUser } = useSelector((state: RootState) => state.currentUser)
+    const isOwner = (board.owned_by.id) === currentUser?.user.id
 
     board.taskStatus?.map((task) => totalTask = totalTask + task.count)
 
     return (
+
         <div className="flex flex-col my-6 bg-neon/10 border hover:border-neon border-white p-5 rounded-xl w-100">
             <div className="p-4">
-                <h5 className="mb-2 text-2xl text-teal-400 font-semibold">
+
+                <h5 className="mb-3 text-2xl text-teal-400 font-semibold">
                     {board.name}
+                    {isOwner &&
+                        <span className="ms-3 px-2 py-1 rounded-full bg-yellow-300 text-black text-xs font-bold inline-block transform -translate-y-1">
+                            Owner
+                        </span>
+                    }
                 </h5>
+
+                <Chip
+                    avatar={<Avatar src={board.owned_by.imageURL} />}
+                    label={board.owned_by.name}
+                    variant="outlined"
+                />
 
                 <table className='w-full my-5 border-separate border-spacing-1.5'>
                     <thead>
@@ -58,10 +77,18 @@ const BoardCard = ({ board }: { board: TBoardCard }) => {
                         {
                             board.members.map(member => {
                                 if (member.imageURL) {
-                                    return <Avatar key={member.name} src={member.imageURL} />;
+                                    return (
+                                        <Tooltip title={member.name} arrow >
+                                            <Avatar key={member.name} src={member.imageURL} />
+                                        </Tooltip>
+                                    )
                                 } else {
                                     const initials = member.name.charAt(0).toUpperCase();
-                                    return <Avatar key={member.name} alt={member.name}>{initials}</Avatar>;
+                                    return (
+                                        <Tooltip title={member.name} arrow>
+                                            <Avatar key={member.name} alt={member.name}>{initials}</Avatar>
+                                        </Tooltip>
+                                    );
                                 }
                             }
                             )
@@ -77,6 +104,7 @@ const BoardCard = ({ board }: { board: TBoardCard }) => {
                 </span>
             </div>
         </div>
+
     )
 }
 
