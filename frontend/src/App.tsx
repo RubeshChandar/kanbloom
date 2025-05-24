@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import GlobalSnackBar from "./components/GlobalSnackBar";
 import HomePage from "./pages/HomePage";
+import BoardPage from "./pages/BoardPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
 
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
+          <Route path="/boards/:slug" element={<BoardPage />} />
         </Route>
 
       </Routes>

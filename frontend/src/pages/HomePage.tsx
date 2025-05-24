@@ -1,5 +1,5 @@
 import BoardCard from "../components/BoardCard"
-import { TBoardCard } from "../types/BoardTypes"
+import { Board } from "../types/BoardTypes"
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import api from "../api";
@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../state/store";
 
 const HomePage = () => {
-    const [allBoards, setAllBoards] = useState<TBoardCard[] | null>(null)
+    const [allBoards, setAllBoards] = useState<Board[] | null>(null)
     const [isLoading, setIsLoading] = useState(false)
     const searchTerm = useSelector((state: RootState) => state.search)
 
@@ -17,7 +17,7 @@ const HomePage = () => {
         setIsLoading(true)
         const fetchAllBoards = async () => {
             try {
-                const res = await api.get('api/boards')
+                const res = await api.get('api/boards/')
                 setAllBoards(res.data)
             }
             catch (error) {

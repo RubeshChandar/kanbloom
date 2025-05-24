@@ -17,9 +17,9 @@ const NavBrand = () => {
                     filter: 'drop-shadow(0 0 5px teal)',
                 }}
             />
-            <Typography variant='h4' padding={'10px 0px'}>
+            <Typography variant='h4' padding={'10px 0px'} sx={{ fontWeight: 500 }}>
                 KANBLOOM
-                <Typography className='text-center text-teal-400 text-[20px]'>
+                <Typography className='text-center text-teal-400 text-[20px]' sx={{ fontWeight: 800 }}>
                     Cultivate your workflow
                 </Typography>
             </Typography>

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import *
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-
+from .utils import convert_time_to_human_readable
 
 User = get_user_model()
 
@@ -10,6 +10,7 @@ User = get_user_model()
 class ShortendUserSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     imageURL = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
 
     def get_name(self, obj):
         return str(obj.username).capitalize()
@@ -21,9 +22,14 @@ class ShortendUserSerializer(serializers.ModelSerializer):
         else:
             return None
 
+    def get_title(self, obj):
+        if not obj.user_profile.title:
+            return "no title given"
+        return obj.user_profile.title
+
     class Meta:
         model = User
-        fields = ['id', 'name', 'imageURL']
+        fields = ['id', 'name', 'imageURL', 'title']
 
 
 class AllBoardsSerializer(serializers.ModelSerializer):
@@ -34,27 +40,7 @@ class AllBoardsSerializer(serializers.ModelSerializer):
     def get_lastUpdated(self, obj):
         if not obj.last_modified:
             return "Unknown"
-
-        now = timezone.now()
-        diff = now - obj.last_modified
-
-        seconds = diff.total_seconds()
-        minutes = seconds // 60
-        hours = minutes // 60
-        days = diff.days
-
-        if seconds < 120:
-            return "Just now"
-        elif minutes < 60:
-            return f"{int(minutes)} minutes ago"
-        elif hours < 24:
-            return f"{int(hours)} hour{'s' if int(hours) != 1 else ''} ago"
-        elif days == 1:
-            return "Yesterday"
-        elif days < 7:
-            return f"{int(days)} days ago"
-        else:
-            return obj.last_modified.strftime("%d %b %Y")
+        return convert_time_to_human_readable(obj.last_modified)
 
     class Meta:
         model = Board

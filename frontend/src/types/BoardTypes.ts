@@ -1,4 +1,4 @@
-export enum TaskStatus {
+enum TaskStatus {
     TO_DO = "TODO",
     IN_PROGRESS = "INPROGRESS",
     BLOCKED = "BLOCKED",
@@ -12,17 +12,28 @@ export const TaskStatusLabel: Record<TaskStatus, string> = {
     [TaskStatus.DONE]: "Done",
 };
 
-export type ShortendUser = {
-    id: string,
-    name: string,
-    imageURL: string
+
+export type TaskCount = {
+    "TODO": number,
+    "INPROGRESS": number,
+    "BLOCKED": number,
+    "DONE": number
 }
 
 
-export type TBoardCard = {
+export type ShortendUser = {
+    id: string,
+    name: string,
+    imageURL: string,
+    title: string,
+}
+
+
+export type Board = {
     slug: string,
     name: string,
-    taskStatus?: { status: TaskStatus, count: number }[],
+    taskCount: TaskCount,
+    totalTasks: number,
     members: ShortendUser[],
     owned_by: ShortendUser,
     lastUpdated: string,

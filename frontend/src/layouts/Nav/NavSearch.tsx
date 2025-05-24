@@ -6,6 +6,7 @@ import { InputAdornment, TextField } from '@mui/material'
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../state/store';
 import { setSearchTerm } from '../../state/SearchBarSlice';
+import { useLocation } from 'react-router-dom';
 
 const sxProps = {
     '& .MuiOutlinedInput-root': {
@@ -33,6 +34,12 @@ const NavSearch = () => {
     const [search, setSearch] = useState('');
 
     const dispatch = useDispatch<AppDispatch>()
+    const location = useLocation()
+
+    useEffect(() => {
+        setSearch('');
+        dispatch(setSearchTerm(''))
+    }, [location.pathname, dispatch])
 
     useEffect(() => {
         const handleShortcut = (event: KeyboardEvent) => {

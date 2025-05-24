@@ -22,7 +22,7 @@ class Board(BaseModel):
     owned_by = models.ForeignKey(
         User, on_delete=models.DO_NOTHING, related_name="owned_boards")
     members = models.ManyToManyField(User, related_name="member_boards")
-    slug = AutoSlugField(populate_from='name')
+    slug = AutoSlugField(populate_from='name', db_index=True, unique=True)
     is_archived = models.BooleanField(default=False, db_index=True)
 
     def __str__(self):

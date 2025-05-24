@@ -49,7 +49,9 @@ const ProtectedView = ({ children }: { children: React.ReactNode }) => {
             })
 
             if (res.status === 200) {
+                console.log("resetting the tokens")
                 localStorage.setItem(ACCESS_TOKEN, res.data.access)
+                localStorage.setItem(REFRESH_TOKEN, res.data.refresh)
                 setIsAuthorised(true)
             }
             else {
@@ -58,6 +60,7 @@ const ProtectedView = ({ children }: { children: React.ReactNode }) => {
         }
         catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 401) {
+                console.log("Tokens Cleared")
                 ClearTokens();
             } else {
                 console.warn("Refresh failed but token might still be valid:", error);

@@ -1,19 +1,17 @@
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
-import LinearProgressWithLabel from "./LinearProgressWithLabel"
-import { TaskStatusLabel, TBoardCard } from '../types/BoardTypes';
+import { LinearProgressWithLabel } from "../utils/ProgressWithLabel"
+import { TaskStatusLabel, Board, TaskCount } from '../types/BoardTypes';
 import { Chip, Tooltip } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from '../state/store';
+import { Link } from 'react-router-dom';
 
 
-const BoardCard = ({ board }: { board: TBoardCard }) => {
+const BoardCard = ({ board }: { board: Board }) => {
 
-    let totalTask = 0;
     const { currentUser } = useSelector((state: RootState) => state.currentUser)
     const isOwner = (board.owned_by.id) === currentUser?.user.id
-
-    board.taskStatus?.map((task) => totalTask = totalTask + task.count)
 
     return (
 
@@ -44,11 +42,11 @@ const BoardCard = ({ board }: { board: TBoardCard }) => {
                     </thead>
                     <tbody>
                         {
-                            board.taskStatus?.map((taskStatus) => {
-                                const progress = totalTask > 0 ? Math.round((taskStatus.count / totalTask) * 100) : 0;
+                            (["TODO", "INPROGRESS", "BLOCKED", "DONE"] as (keyof TaskCount)[]).map((status) => {
+                                const progress = board.totalTasks ? Math.round((board.taskCount[status] / board.totalTasks) * 100) : 0;
                                 return (
-                                    <tr key={taskStatus.status}>
-                                        <td className='font-bold uppercase'>{TaskStatusLabel[taskStatus.status]}</td>
+                                    <tr key={status}>
+                                        <td className='font-bold uppercase'>{TaskStatusLabel[status]}</td>
                                         <td className='text-center'>
                                             <LinearProgressWithLabel value={progress} />
                                         </td>
@@ -59,7 +57,7 @@ const BoardCard = ({ board }: { board: TBoardCard }) => {
                         <tr key="TOTAL">
                             <td colSpan={2} className='text-center text-teal-400 font-bold'>
                                 There are a total of
-                                <span className="text-red-400 text-[20px] mx-1 align-baseline">{totalTask}</span>
+                                <span className="text-red-400 text-[20px] mx-1 align-baseline">{board.totalTasks}</span>
                                 Tasks
                             </td>
                         </tr>
@@ -67,12 +65,12 @@ const BoardCard = ({ board }: { board: TBoardCard }) => {
                 </table>
 
                 <div className="mt-4 grid grid-cols-2 cursor-pointer">
-                    <a className="text-neon font-bold hover:underline flex items-center">
+                    <Link to={`/boards/${board.slug}`} className="text-neon font-bold hover:underline flex items-center">
                         Explore More
                         <svg xmlns="http://www.w3.org/2000/svg" className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
-                    </a>
+                    </Link>
                     <AvatarGroup max={4} spacing='medium'>
                         {
                             board.members.map(member => {
