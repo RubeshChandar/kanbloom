@@ -1,16 +1,15 @@
-import { Alert, AlertTitle, Button, IconButton, InputAdornment } from '@mui/material';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { Login, LoginSchema } from '../types/AuthTypes';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { AuthInput } from '../components/AuthInput';
-import { useState } from 'react';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import api from '../api';
-import { AuthToken } from '../types/AuthTypes';
+import { Alert, AlertTitle, Button, IconButton, InputAdornment } from '@mui/material';
 import axios from 'axios';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
+import api from '../api';
+import { AuthInput } from '../components/AuthInput';
+import { AuthToken, Login, LoginSchema } from '../types/AuthTypes';
 import { SetTokens } from '../utils/TokenHandler';
 
 const LoginPage = () => {
@@ -63,7 +62,7 @@ const LoginPage = () => {
 
     return (
         <form className="flex flex-col gap-7 min-w-88" onSubmit={handleSubmit(login)}>
-            <div className="text-2xl text-primary font-bold text-center uppercase">Login</div>
+            <div className="text-2xl font-bold text-center uppercase text-primary">Login</div>
 
             <AuthInput fieldname='E-mail' {...register('email')} error={errors.email?.message} />
             <AuthInput fieldname='Password' {...register('password')} error={errors.password?.message}

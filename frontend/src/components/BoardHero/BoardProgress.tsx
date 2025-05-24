@@ -4,13 +4,13 @@ import { TaskCount } from "@src/types/BoardTypes";
 
 const BoardProgress = ({ taskCount, totalTasks }: { taskCount: TaskCount, totalTasks: number }) => {
     return (
-        <table className="text-center">
+        <table className="w-full text-center">
             <thead>
-                <tr className="text-teal-400 text-xl font-bold">
-                    <th className="py-2 px-5">TO DO</th>
-                    <th className="py-2 px-5">IN PROGRESS</th>
-                    <th className="py-2 px-5">BLOCKED</th>
-                    <th className="py-2 px-5">DONE</th>
+                <tr className="text-xl font-bold text-teal-400">
+                    <th className="px-5 py-2">TO DO</th>
+                    <th className="px-5 py-2">IN PROGRESS</th>
+                    <th className="px-5 py-2">BLOCKED</th>
+                    <th className="px-5 py-2">DONE</th>
                 </tr>
             </thead>
             <tbody>

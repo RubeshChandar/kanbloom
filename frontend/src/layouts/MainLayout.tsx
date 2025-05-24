@@ -1,13 +1,13 @@
 import { Outlet } from 'react-router-dom'
-import ProtectedView from './ProtectedView'
 import NavBar from './Nav/NavBar'
+import ProtectedView from './ProtectedView'
 
 const MainLayout = () => {
     return (
         <ProtectedView>
             <main>
                 <NavBar />
-                <div className="mt-8 px-5">
+                <div className="px-5 mt-8">
                     <Outlet></Outlet>
                 </div>
             </main>

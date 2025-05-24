@@ -1,11 +1,11 @@
+import { Chip, Tooltip } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
-import { LinearProgressWithLabel } from "../utils/ProgressWithLabel"
-import { TaskStatusLabel, Board, TaskCount } from '../types/BoardTypes';
-import { Chip, Tooltip } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { RootState } from '../state/store';
 import { Link } from 'react-router-dom';
+import { RootState } from '../state/store';
+import { Board, TaskCount, TaskStatusLabel } from '../types/BoardTypes';
+import { LinearProgressWithLabel } from "../utils/ProgressWithLabel";
 
 
 const BoardCard = ({ board }: { board: Board }) => {
@@ -15,13 +15,13 @@ const BoardCard = ({ board }: { board: Board }) => {
 
     return (
 
-        <div className="flex flex-col my-6 bg-neon/10 border hover:border-neon border-white p-5 rounded-xl w-100">
+        <div className="flex flex-col p-5 my-6 border border-white bg-neon/10 hover:border-neon rounded-xl w-100">
             <div className="p-4">
 
-                <h5 className="mb-3 text-2xl text-teal-400 font-semibold">
+                <h5 className="mb-3 text-2xl font-semibold text-teal-400">
                     {board.name}
                     {isOwner &&
-                        <span className="ms-3 px-2 py-1 rounded-full bg-yellow-300 text-black text-xs font-bold inline-block transform -translate-y-1">
+                        <span className="inline-block px-2 py-1 text-xs font-bold text-black transform -translate-y-1 bg-yellow-300 rounded-full ms-3">
                             Owner
                         </span>
                     }
@@ -55,7 +55,7 @@ const BoardCard = ({ board }: { board: Board }) => {
                             })
                         }
                         <tr key="TOTAL">
-                            <td colSpan={2} className='text-center text-teal-400 font-bold'>
+                            <td colSpan={2} className='font-bold text-center text-teal-400'>
                                 There are a total of
                                 <span className="text-red-400 text-[20px] mx-1 align-baseline">{board.totalTasks}</span>
                                 Tasks
@@ -64,10 +64,10 @@ const BoardCard = ({ board }: { board: Board }) => {
                     </tbody>
                 </table>
 
-                <div className="mt-4 grid grid-cols-2 cursor-pointer">
-                    <Link to={`/boards/${board.slug}`} className="text-neon font-bold hover:underline flex items-center">
+                <div className="grid grid-cols-2 mt-4 cursor-pointer">
+                    <Link to={`/boards/${board.slug}`} className="flex items-center font-bold text-neon hover:underline">
                         Explore More
-                        <svg xmlns="http://www.w3.org/2000/svg" className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
                     </Link>
@@ -96,8 +96,8 @@ const BoardCard = ({ board }: { board: Board }) => {
 
             </div>
 
-            <div className="mx-3 border-t border-white-300 pb-3 pt-2 px-1">
-                <span className="text-sm text-red-400 font-medium">
+            <div className="px-1 pt-2 pb-3 mx-3 border-t border-white-300">
+                <span className="text-sm font-medium text-red-400">
                     Last updated: {board.lastUpdated}
                 </span>
             </div>

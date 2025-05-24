@@ -1,9 +1,9 @@
-import { NavLink, Outlet } from 'react-router-dom'
-import { glassyCard } from '../styles/CustomStyleMUI';
 import { Alert, AlertTitle, Card } from '@mui/material';
 import { jwtDecode } from 'jwt-decode';
-import { REFRESH_TOKEN } from '../types/Constants';
 import { useEffect, useState } from 'react';
+import { NavLink, Outlet } from 'react-router-dom';
+import { glassyCard } from '../styles/CustomStyleMUI';
+import { REFRESH_TOKEN } from '../types/Constants';
 
 
 const AuthLayout = () => {
@@ -26,7 +26,7 @@ const AuthLayout = () => {
 
                 {
                     isTokenValid &&
-                    <Alert className="mt-5 flex justify-center" variant='outlined' severity="warning">
+                    <Alert className="flex justify-center mt-5" variant='outlined' severity="warning">
                         <AlertTitle className='font-bold text-amber-300'>
                             Looks like you are already Logged In.
                         </AlertTitle>

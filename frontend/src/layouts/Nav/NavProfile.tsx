@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 
-import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
 import CableIcon from '@mui/icons-material/Cable';
 import FaceRetouchingNaturalIcon from '@mui/icons-material/FaceRetouchingNatural';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
 
-import { UserProfile } from '../../types/UserProfile';
-import theme from '../../styles/MaterialTheme';
-import api from '../../api';
-import { REFRESH_TOKEN } from '../../types/Constants';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import api from '../../api';
 import { clearCurrentUser } from '../../state/UserProfile';
+import theme from '../../styles/MaterialTheme';
+import { REFRESH_TOKEN } from '../../types/Constants';
+import { UserProfile } from '../../types/UserProfile';
 import { ClearTokens } from '../../utils/TokenHandler';
 
 

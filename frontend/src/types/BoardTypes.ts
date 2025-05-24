@@ -1,3 +1,5 @@
+import { ShortendUser } from "./UserProfile";
+
 enum TaskStatus {
     TO_DO = "TODO",
     IN_PROGRESS = "INPROGRESS",
@@ -19,15 +21,6 @@ export type TaskCount = {
     "BLOCKED": number,
     "DONE": number
 }
-
-
-export type ShortendUser = {
-    id: string,
-    name: string,
-    imageURL: string,
-    title: string,
-}
-
 
 export type Board = {
     slug: string,

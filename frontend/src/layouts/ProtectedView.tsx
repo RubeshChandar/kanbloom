@@ -1,15 +1,15 @@
-import { Navigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-import api from "../api";
-import { REFRESH_TOKEN, ACCESS_TOKEN } from "../types/Constants";
-import { useEffect, useState } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
-import { DecodedJWT } from "../types/AuthTypes";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { Navigate } from "react-router-dom";
+import api from "../api";
 import { fetchCurrentUserProfile } from "../state/UserProfile";
 import { AppDispatch } from "../state/store";
+import { DecodedJWT } from "../types/AuthTypes";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../types/Constants";
 import { ClearTokens } from "../utils/TokenHandler";
-import axios from "axios";
 
 const ProtectedView = ({ children }: { children: React.ReactNode }) => {
     const [isAuthorised, setIsAuthorised] = useState<boolean | null>(null);

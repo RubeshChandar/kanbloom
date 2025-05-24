@@ -1,8 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../state/store'
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import { useDispatch, useSelector } from 'react-redux';
 import { hideSnackbar } from '../state/SnackBarSlice';
+import { RootState } from '../state/store';
 
 const Alert = MuiAlert as React.ElementType;
 

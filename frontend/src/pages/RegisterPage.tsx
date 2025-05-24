@@ -1,17 +1,17 @@
-import { Button, IconButton, InputAdornment } from '@mui/material';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
-import { useNavigate } from 'react-router-dom';
-import { Register, RegisterSchema } from '../types/AuthTypes';
-import { AuthInput } from '../components/AuthInput';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useDispatch } from 'react-redux';
-import { showSnackbar } from '../state/SnackBarSlice';
-import api from '../api';
+import { Button, IconButton, InputAdornment } from '@mui/material';
 import { AxiosError } from 'axios';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import api from '../api';
+import { AuthInput } from '../components/AuthInput';
+import { showSnackbar } from '../state/SnackBarSlice';
+import { Register, RegisterSchema } from '../types/AuthTypes';
 import { ClearTokens } from '../utils/TokenHandler';
 
 
@@ -57,7 +57,7 @@ const RegisterPage = () => {
     }
     return (
         <form className="flex flex-col gap-7 min-w-88" onSubmit={handleSubmit(RegisterUser)}>
-            <div className="text-2xl text-primary font-bold text-center uppercase">Register</div>
+            <div className="text-2xl font-bold text-center uppercase text-primary">Register</div>
 
             <AuthInput {...register("email")} fieldname='E-mail' error={errors.email?.message} />
             <AuthInput {...register("username")} fieldname='Username' error={errors.username?.message} />

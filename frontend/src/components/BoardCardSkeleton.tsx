@@ -3,7 +3,7 @@ import Skeleton from '@mui/material/Skeleton';
 
 export const BoardCardSkeleton = () => {
     return (
-        <div className="flex flex-col my-6 bg-neon/10 border border-white p-5 rounded-xl w-100">
+        <div className="flex flex-col p-5 my-6 border border-white bg-neon/10 rounded-xl w-100">
             <div className="p-4">
                 <Skeleton variant="text" width="60%" height={32} sx={{ bgcolor: 'grey.800' }} />
 
@@ -29,7 +29,7 @@ export const BoardCardSkeleton = () => {
                     </tbody>
                 </table>
 
-                <div className="mt-4 grid grid-cols-2">
+                <div className="grid grid-cols-2 mt-4">
                     <Skeleton variant="text" width="60%" sx={{ bgcolor: 'grey.800' }} />
                     <div className="flex justify-end">
                         {Array.from({ length: 3 }).map((_, idx) => (
@@ -39,7 +39,7 @@ export const BoardCardSkeleton = () => {
                 </div>
             </div>
 
-            <div className="mx-3 border-t border-white-300 pb-3 pt-2 px-1">
+            <div className="px-1 pt-2 pb-3 mx-3 border-t border-white-300">
                 <Skeleton variant="text" width="40%" sx={{ bgcolor: 'grey.800' }} />
             </div>
         </div>

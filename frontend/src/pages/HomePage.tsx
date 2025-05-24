@@ -1,12 +1,12 @@
-import BoardCard from "../components/BoardCard"
-import { Board } from "../types/BoardTypes"
-import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-import api from "../api";
+import Fab from '@mui/material/Fab';
 import { useEffect, useMemo, useState } from "react";
-import { BoardCardSkeleton } from "../components/BoardCardSkeleton";
 import { useSelector } from "react-redux";
+import api from "../api";
+import BoardCard from "../components/BoardCard";
+import { BoardCardSkeleton } from "../components/BoardCardSkeleton";
 import { RootState } from "../state/store";
+import { Board } from "../types/BoardTypes";
 
 const HomePage = () => {
     const [allBoards, setAllBoards] = useState<Board[] | null>(null)

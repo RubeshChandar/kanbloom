@@ -5,6 +5,14 @@ export type User = {
     date_joined: string;
 }
 
+
+export type ShortendUser = {
+    id: string,
+    name: string,
+    imageURL: string,
+    title: string,
+}
+
 export type UserProfile = {
     id: string;
     user: User;

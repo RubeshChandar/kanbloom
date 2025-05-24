@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
-import SearchIcon from '@mui/icons-material/Search';
 import command from '@assets/command.svg';
-import theme from '../../styles/MaterialTheme';
-import { InputAdornment, TextField } from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search';
+import { InputAdornment, TextField } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../state/store';
-import { setSearchTerm } from '../../state/SearchBarSlice';
 import { useLocation } from 'react-router-dom';
+import { setSearchTerm } from '../../state/SearchBarSlice';
+import { AppDispatch } from '../../state/store';
+import theme from '../../styles/MaterialTheme';
 
 const sxProps = {
     '& .MuiOutlinedInput-root': {
