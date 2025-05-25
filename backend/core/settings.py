@@ -1,7 +1,8 @@
-from pathlib import Path
-from dotenv import load_dotenv
 import os
 from datetime import timedelta
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -79,9 +80,14 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 
 DATABASES = {
+
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": "db",
+        "PORT": os.getenv("POSTGRES_PORT", 5432),
     }
 }
 
@@ -112,6 +118,7 @@ USE_TZ = True
 
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR.parent / "static"
 
 AUTH_USER_MODEL = "users.CustomUser"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

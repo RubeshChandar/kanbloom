@@ -57,3 +57,6 @@ htmlcov/
 # TypeScript / JS
 *.tsbuildinfo
 .eslintcache
+
+# DB
+db_data/

@@ -1,13 +1,51 @@
 name: Kanbloom
 
 services:
+  db:
+    image: postgres
+    container_name: db-kanbloom
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+
   frontend:
     build: ./frontend
-    container_name: React_Kanbloom
+    container_name: react-kanbloom
     ports:
-      - 3000:3000
+      - "${VITE_PORT}:${VITE_PORT}"
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    restart: unless-stopped
     env_file:
       - .env
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    container_name: django-kanbloom
+    command: /app/entrypoint.sh
+    restart: unless-stopped
+    ports:
+      - "${DJANGO_PORT}:${DJANGO_PORT}"
+    volumes:
+      - ./backend:/app
+      - ./media:/media
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
