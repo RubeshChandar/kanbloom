@@ -1,7 +1,8 @@
-from rest_framework import serializers
-from .models import *
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from rest_framework import serializers
+
+from .models import *
 from .utils import convert_time_to_human_readable
 
 User = get_user_model()
@@ -32,7 +33,7 @@ class ShortendUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'imageURL', 'title']
 
 
-class AllBoardsSerializer(serializers.ModelSerializer):
+class BoardsSerializer(serializers.ModelSerializer):
     members = ShortendUserSerializer(many=True, read_only=True)
     owned_by = ShortendUserSerializer(read_only=True)
     lastUpdated = serializers.SerializerMethodField()
@@ -42,7 +43,12 @@ class AllBoardsSerializer(serializers.ModelSerializer):
             return "Unknown"
         return convert_time_to_human_readable(obj.last_modified)
 
+    def to_representation(self, instance):
+        res = super().to_representation(instance)
+        res['created_at'] = instance.created_at.strftime('%I:%M%p, %-d %B %Y')
+        return res
+
     class Meta:
         model = Board
-        exclude = ['id', 'is_archived', 'created_at', 'last_modified']
+        exclude = ['id', 'is_archived', 'last_modified']
         read_only_fields = ['lastUpdated', 'slug']

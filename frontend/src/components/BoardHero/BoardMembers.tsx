@@ -4,13 +4,11 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
-import { ShortendUser } from '@src/types/BoardTypes';
+import { ShortendUser } from '@src/types/UserProfile';
 
 const BoardMembers = ({ owner, members }: { owner: ShortendUser, members: ShortendUser[] }) => {
     return (
-        <div
-            className="flex flex-col items-center col-span-2 p-4 border bg-white/10 backdrop-blur-md border-white/20 rounded-xl h-80"
-        >
+        <div className='flex flex-col items-center p-4 border bg-white/10 border-white/20 rounded-xl h-80'>
             <h3 className="mb-3 text-lg font-semibold text-neon">TEAM MEMBERS</h3>
             <List className="w-full overflow-y-auto max-h-100 custom-scroll-bar">
                 <ListItem alignItems="center">

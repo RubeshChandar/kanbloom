@@ -9,8 +9,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
-import { AuthInput } from '../components/AuthInput';
 import { showSnackbar } from '../state/SnackBarSlice';
+import { TextInput } from '../styles/TextInput';
 import { Register, RegisterSchema } from '../types/AuthTypes';
 import { ClearTokens } from '../utils/TokenHandler';
 
@@ -59,10 +59,10 @@ const RegisterPage = () => {
         <form className="flex flex-col gap-7 min-w-88" onSubmit={handleSubmit(RegisterUser)}>
             <div className="text-2xl font-bold text-center uppercase text-primary">Register</div>
 
-            <AuthInput {...register("email")} fieldname='E-mail' error={errors.email?.message} />
-            <AuthInput {...register("username")} fieldname='Username' error={errors.username?.message} />
+            <TextInput {...register("email")} fieldname='E-mail' error={errors.email?.message} />
+            <TextInput {...register("username")} fieldname='Username' error={errors.username?.message} />
 
-            <AuthInput {...register("password")} fieldname='Password' error={errors.password?.message}
+            <TextInput {...register("password")} fieldname='Password' error={errors.password?.message}
                 type={showPassword ? 'text' : 'password'}
                 endAdornment={
                     <InputAdornment position='end'>
@@ -74,7 +74,7 @@ const RegisterPage = () => {
                     </InputAdornment>
                 }
             />
-            <AuthInput {...register("confirmPassword")} fieldname='Confirm Password' type='password' error={errors.confirmPassword?.message} />
+            <TextInput {...register("confirmPassword")} fieldname='Confirm Password' type='password' error={errors.confirmPassword?.message} />
 
             <div className='flex flex-col gap-5'>
                 <Button variant="contained" color="primary" type='submit'>

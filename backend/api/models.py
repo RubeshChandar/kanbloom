@@ -1,8 +1,9 @@
 import uuid
-from django.db import models
+
 from django.contrib.auth import get_user_model
-from django_extensions.db.fields import AutoSlugField
+from django.db import models
 from django.utils import timezone
+from django_extensions.db.fields import AutoSlugField
 
 User = get_user_model()
 

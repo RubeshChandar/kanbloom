@@ -1,13 +1,15 @@
 from collections import defaultdict
-from django.db.models import Count
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import get_user_model
 
-from .serializers import AllBoardsSerializer, ShortendUserSerializer
-from .models import Board, Task
+from django.contrib.auth import get_user_model
 from django.db import connection
+from django.db.models import Count
+from django.template.defaultfilters import slugify
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import Board, Task
+from .serializers import BoardsSerializer, ShortendUserSerializer
 
 User = get_user_model()
 
@@ -29,7 +31,7 @@ class get_boards(APIView):
             .prefetch_related("members__user_profile")
         )
 
-        res = AllBoardsSerializer(
+        res = BoardsSerializer(
             boards, many=True, context={"request": request})
 
         tasks_count = Task.objects.filter(board__in=boards)\
@@ -42,8 +44,6 @@ class get_boards(APIView):
 
         for localslug, status, count in tasks_count:
             boards_status[localslug][status] += count
-
-        print(list(boards_status.values()))
 
         # Legacy
         # for data in res.data:
@@ -60,3 +60,44 @@ class get_boards(APIView):
 
         # Here I'm returning just the first object if slug was provided
         return Response(res.data[0] if slug else res.data)
+
+
+class edit_board(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_new_slug(self, name):
+        base_slug = slugify(name)
+        slug = base_slug
+        counter = 1
+
+        while Board.objects.filter(slug=slug).exists():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+
+        return slug
+
+    def post(self, request, slug):
+        name, description = (request.data.get(k)
+                             for k in ('name', 'description'))
+
+        board = Board.objects.filter(slug=slug).first()
+
+        if not board:
+            return Response({'data': "Board not found check slug"}, status=404)
+
+        new_slug = self.get_new_slug(name) if name else slug
+        if name and name != board.name:
+            if name.lower() != board.name.lower():
+                board.slug = new_slug
+
+            board.name = name
+
+        if description != board.description:
+            board.description = description
+
+        if not name and not description:
+            return Response({'data': 'Nothing to update'}, status=200)
+
+        board.save()
+
+        return Response({'data': 'Successfully updated board', 'slug': board.slug}, status=200)

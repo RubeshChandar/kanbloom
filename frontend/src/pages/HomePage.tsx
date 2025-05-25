@@ -41,7 +41,7 @@ const HomePage = () => {
 
 
     return (
-        <div className="grid grid-cols-3 gap-x-4">
+        <div className="grid items-center grid-cols-3 gap-y-5 justify-items-center">
             {
                 isLoading
                     ?

@@ -67,7 +67,7 @@ const NavSearch = () => {
 
     return (
         <TextField className='w-100'
-            placeholder='Search...'
+            placeholder='> Power Bar'
             sx={sxProps}
             inputRef={inputRef}
             value={search}

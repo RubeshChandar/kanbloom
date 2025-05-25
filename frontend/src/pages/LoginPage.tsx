@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../api';
-import { AuthInput } from '../components/AuthInput';
+import { TextInput } from '../styles/TextInput';
 import { AuthToken, Login, LoginSchema } from '../types/AuthTypes';
 import { SetTokens } from '../utils/TokenHandler';
 
@@ -64,8 +64,8 @@ const LoginPage = () => {
         <form className="flex flex-col gap-7 min-w-88" onSubmit={handleSubmit(login)}>
             <div className="text-2xl font-bold text-center uppercase text-primary">Login</div>
 
-            <AuthInput fieldname='E-mail' {...register('email')} error={errors.email?.message} />
-            <AuthInput fieldname='Password' {...register('password')} error={errors.password?.message}
+            <TextInput fieldname='E-mail' {...register('email')} error={errors.email?.message} />
+            <TextInput fieldname='Password' {...register('password')} error={errors.password?.message}
                 type={showPassword ? "text" : "password"}
                 endAdornment={
                     <InputAdornment position="end">
