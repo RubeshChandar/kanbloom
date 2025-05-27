@@ -4,21 +4,27 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Card, CircularProgress } from '@mui/material';
 import Button from '@mui/material/Button';
 import api from '@src/api';
+import { showSnackbar } from '@src/state/SnackBarSlice';
 import { glassyCard } from '@src/styles/CustomStyleMUI';
 import { TextInput } from '@src/styles/TextInput';
 import { BasicBoardEditSchema, TBasicBoardEdit } from '@src/types/BoardTypes';
+import axios from 'axios';
 import { SetStateAction } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 type EditForm = {
     setShowForm: React.Dispatch<SetStateAction<boolean>>,
-    basicDetail: TBasicBoardEdit,
-    slug: string,
+    basicDetail?: TBasicBoardEdit,
+    slug?: string,
+    isNew?: boolean,
 }
 
-const BoardEditForm = ({ setShowForm, slug, basicDetail }: EditForm) => {
+const BoardCreateOrEditForm = ({ setShowForm, slug, basicDetail, isNew = false }: EditForm) => {
     const nav = useNavigate()
+    const dispatch = useDispatch()
+
     const {
         register,
         handleSubmit,
@@ -29,16 +35,48 @@ const BoardEditForm = ({ setShowForm, slug, basicDetail }: EditForm) => {
     });
 
     const changeBoardDetails: SubmitHandler<TBasicBoardEdit> = async (data) => {
-        const res = await api.post(`api/boards/${slug}/edit/`, data)
-        setShowForm(false)
-        nav(`/boards/${res.data.slug}?refresh=${Date.now()}`, { replace: true })
+
+        try {
+            const res = await api.post(
+                isNew ? "api/boards/create/" : `api/boards/${slug}/edit/`,
+                data
+            )
+
+            dispatch(
+                showSnackbar({
+                    message: res.data['data'],
+                    severity: 'success',
+                })
+            );
+
+            setShowForm(false)
+            nav(`/boards/${res.data.slug}?refresh=${Date.now()}`, { replace: true })
+        }
+
+        catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 400) {
+                dispatch(showSnackbar({
+                    message: error.response.data['error'],
+                    severity: 'error',
+                }))
+                setShowForm(false)
+                nav(`/boards/${error.response.data['slug']}?refresh=${Date.now()}`, { replace: true })
+            }
+            else {
+                setShowForm(false)
+                console.log(error)
+            }
+        }
+
     }
 
     return (
         <Card
             sx={glassyCard}
             className="w-full max-w-md">
-            <h2 className="mb-6 text-xl font-bold tracking-wide text-center text-white">EDIT THE BOARD</h2>
+            <h2 className="mb-6 text-xl font-bold tracking-wide text-center text-white uppercase">
+                {isNew ? "Create new board" : "Edit the board"}
+            </h2>
             <form className="flex flex-col gap-6" onSubmit={handleSubmit(changeBoardDetails)}>
 
                 <TextInput
@@ -77,4 +115,4 @@ const BoardEditForm = ({ setShowForm, slug, basicDetail }: EditForm) => {
     )
 }
 
-export default BoardEditForm
+export default BoardCreateOrEditForm

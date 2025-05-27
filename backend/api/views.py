@@ -101,3 +101,25 @@ class edit_board(APIView):
         board.save()
 
         return Response({'data': 'Successfully updated board', 'slug': board.slug}, status=200)
+
+
+class create_baord(APIView):
+    def post(self, request):
+        name, description = (request.data.get(k)
+                             for k in ('name', 'description'))
+
+        if not request.data.get('name'):
+            return Response({'data': 'Name is a required field'}, status=400)
+
+        board, created = Board.objects.get_or_create(
+            name=name,
+            description=description,
+            owned_by=request.user
+        )
+
+        board.members.add(request.user)
+
+        if not created:
+            return Response({'error': 'Board already exists', 'slug': board.slug}, status=400)
+
+        return Response({'data': 'Successfully created board', 'slug': board.slug}, status=200)

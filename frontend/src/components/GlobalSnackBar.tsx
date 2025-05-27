@@ -14,7 +14,7 @@ const GlobalSnackBar = () => {
     return (
         <Snackbar
             autoHideDuration={5000}
-            open={open} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={open} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             onClose={() => { dispatch(hideSnackbar()) }}
         >
             <Alert severity={severity} onClose={() => { dispatch(hideSnackbar()) }} >

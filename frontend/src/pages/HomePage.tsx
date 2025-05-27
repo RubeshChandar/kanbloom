@@ -1,5 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
+import Backdrop from '@mui/material/Backdrop';
 import Fab from '@mui/material/Fab';
+import BoardEditForm from '@src/components/BoardEditForm';
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import api from "../api";
@@ -8,11 +10,12 @@ import { BoardCardSkeleton } from "../components/BoardCardSkeleton";
 import { RootState } from "../state/store";
 import { Board } from "../types/BoardTypes";
 
+
 const HomePage = () => {
     const [allBoards, setAllBoards] = useState<Board[] | null>(null)
+    const [showForm, setShowForm] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const searchTerm = useSelector((state: RootState) => state.search)
-
     useEffect(() => {
         setIsLoading(true)
         const fetchAllBoards = async () => {
@@ -41,7 +44,7 @@ const HomePage = () => {
 
 
     return (
-        <div className="grid items-center grid-cols-3 gap-y-5 justify-items-center">
+        <div className="grid items-center grid-cols-3 gap-y-3 gap-x-10 justify-items-center">
             {
                 isLoading
                     ?
@@ -53,6 +56,21 @@ const HomePage = () => {
                         (board, index) => <BoardCard board={board} key={index} />
                     )
             }
+
+            <Backdrop
+                open={showForm}
+                sx={{
+                    zIndex: (theme) => theme.zIndex.modal + 1,
+                    backdropFilter: 'blur(8px)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                }}
+            >
+                <BoardEditForm
+                    isNew={true}
+                    setShowForm={setShowForm}
+                />
+            </Backdrop>
+
             <Fab
                 color="secondary"
                 variant="extended"
@@ -62,6 +80,7 @@ const HomePage = () => {
                     right: 40,
                     zIndex: 1000
                 }}
+                onClick={() => setShowForm(true)}
             >
                 <AddIcon className="font-bold" />
                 <span className="font-bold ms-1"> New board</span>

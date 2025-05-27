@@ -8,7 +8,7 @@ import '@src/index.css';
 import { Board } from "@src/types/BoardTypes";
 import { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
-import BoardEditForm from './BoardEditForm';
+import BoardEditForm from '../BoardEditForm';
 import BoardMembers from "./BoardMembers";
 import BoardProgress from "./BoardProgress";
 
