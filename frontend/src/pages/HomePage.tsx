@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import Backdrop from '@mui/material/Backdrop';
 import Fab from '@mui/material/Fab';
-import BoardEditForm from '@src/components/BoardEditForm';
+import BoardEditForm from '@src/components/BoardCreateOrEditForm';
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import api from "../api";
@@ -44,7 +44,7 @@ const HomePage = () => {
 
 
     return (
-        <div className="grid items-center grid-cols-3 gap-y-3 gap-x-10 justify-items-center">
+        <div className="grid items-center grid-cols-3 gap-y-2 gap-x-10 justify-items-center">
             {
                 isLoading
                     ?

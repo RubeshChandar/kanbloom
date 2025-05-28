@@ -4,12 +4,13 @@ from django.contrib.auth import get_user_model
 from django.db import connection
 from django.db.models import Count
 from django.template.defaultfilters import slugify
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Board, Task
-from .serializers import BoardsSerializer, ShortendUserSerializer
+from .serializers import BoardsSerializer, TasksSerializer
 
 User = get_user_model()
 
@@ -21,9 +22,12 @@ class get_boards(APIView):
         user = request.user
 
         if slug:
-            qset = user.member_boards.filter(slug=slug, is_archived=False)
+            qset = user.member_boards.filter(slug=slug)
         else:
-            qset = user.member_boards.filter(is_archived=False)
+            qset = user.member_boards.all()
+
+        if not qset:
+            return Response({"data": "Board not found"}, status=404)
 
         boards = (
             qset
@@ -45,12 +49,6 @@ class get_boards(APIView):
         for localslug, status, count in tasks_count:
             boards_status[localslug][status] += count
 
-        # Legacy
-        # for data in res.data:
-        #     localslug = data['slug']
-        #     data['taskStatus'] = [{"status": status, "count": count}
-        #                           for status, count in boards_status[localslug].items()]
-
         for data in res.data:
             localslug = data['slug']
             data['taskCount'] = boards_status[localslug]
@@ -62,7 +60,7 @@ class get_boards(APIView):
         return Response(res.data[0] if slug else res.data)
 
 
-class edit_board(APIView):
+class board(APIView):
     permission_classes = [IsAuthenticated]
 
     def get_new_slug(self, name):
@@ -76,14 +74,14 @@ class edit_board(APIView):
 
         return slug
 
-    def post(self, request, slug):
+    def put(self, request, slug):
         name, description = (request.data.get(k)
                              for k in ('name', 'description'))
 
         board = Board.objects.filter(slug=slug).first()
 
         if not board:
-            return Response({'data': "Board not found check slug"}, status=404)
+            return Response({'data': "Board not found check slug"}, status=status.HTTP_404_NOT_FOUND)
 
         new_slug = self.get_new_slug(name) if name else slug
         if name and name != board.name:
@@ -92,24 +90,22 @@ class edit_board(APIView):
 
             board.name = name
 
-        if description != board.description:
+        if description and description != board.description:
             board.description = description
 
         if not name and not description:
-            return Response({'data': 'Nothing to update'}, status=200)
+            return Response({'data': 'Nothing to update'}, status=status.HTTP_200_OK)
 
         board.save()
 
-        return Response({'data': 'Successfully updated board', 'slug': board.slug}, status=200)
+        return Response({'data': 'Successfully updated board', 'slug': board.slug}, status=status.HTTP_200_OK)
 
-
-class create_baord(APIView):
     def post(self, request):
         name, description = (request.data.get(k)
                              for k in ('name', 'description'))
 
         if not request.data.get('name'):
-            return Response({'data': 'Name is a required field'}, status=400)
+            return Response({'data': 'Name is a required field'}, status=status.HTTP_400_BAD_REQUEST)
 
         board, created = Board.objects.get_or_create(
             name=name,
@@ -120,6 +116,49 @@ class create_baord(APIView):
         board.members.add(request.user)
 
         if not created:
-            return Response({'error': 'Board already exists', 'slug': board.slug}, status=400)
+            return Response(
+                {'error': 'Board already exists', 'slug': board.slug},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-        return Response({'data': 'Successfully created board', 'slug': board.slug}, status=200)
+        return Response(
+            {'data': 'Successfully created board', 'slug': board.slug},
+            status=status.HTTP_200_OK
+        )
+
+    def delete(self, request, slug):
+        board = Board.objects.filter(slug=slug).first()
+
+        if not board:
+            return Response(
+                {"data": "Board not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if request.user != board.owned_by:
+            return Response(
+                {"error": f"{request.user} doesn't own '{board.name}' board"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        board.is_active = False
+        board.save()
+        return Response(
+            {"data": f"{board.name} deleted Successfully!!!"},
+            status=status.HTTP_200_OK
+        )
+
+
+class tasks(generics.ListAPIView):
+    serializer_class = TasksSerializer
+
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+        return Task.objects.filter(board__slug=slug)
+
+    def list(self, request, slug):
+        serializer = TasksSerializer(
+            self.get_queryset(), many=True,
+            context={'request': request}
+        )
+        return Response(serializer.data)

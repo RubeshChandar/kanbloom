@@ -1,5 +1,5 @@
-import { CircularProgressWithLabel } from "@src/utils/ProgressWithLabel";
 import { TaskCount } from "@src/types/BoardTypes";
+import { CircularProgressWithLabel } from "@src/utils/ProgressWithLabel";
 
 
 const BoardProgress = ({ taskCount, totalTasks }: { taskCount: TaskCount, totalTasks: number }) => {
@@ -17,7 +17,8 @@ const BoardProgress = ({ taskCount, totalTasks }: { taskCount: TaskCount, totalT
                 <tr>
                     {
                         (["TODO", "INPROGRESS", "BLOCKED", "DONE"] as (keyof TaskCount)[]).map((status) => {
-                            const val = (taskCount[status] / totalTasks) * 100
+                            let val = (taskCount[status] / totalTasks) * 100
+                            if (totalTasks === 0) val = 0;
                             return (
                                 <td className="py-4" key={status}>
                                     <CircularProgressWithLabel

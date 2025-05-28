@@ -1,6 +1,7 @@
-from rest_framework import serializers
-from .models import UserProfile
 from django.contrib.auth import get_user_model
+from rest_framework import serializers
+
+from .models import UserProfile
 
 User = get_user_model()
 
@@ -44,6 +45,7 @@ class UserProfileSerialiser(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
+        rep["profile_id"] = rep.pop("id")
         request = self.context.get("request")
 
         if request and (request.user.id == instance.user.id):
@@ -55,4 +57,4 @@ class UserProfileSerialiser(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         exclude = ["created_at", "last_modified"]
-        read_only_fields = ["id"]
+        read_only_fields = ["profile_id"]

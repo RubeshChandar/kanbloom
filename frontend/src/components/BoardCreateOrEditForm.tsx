@@ -37,17 +37,15 @@ const BoardCreateOrEditForm = ({ setShowForm, slug, basicDetail, isNew = false }
     const changeBoardDetails: SubmitHandler<TBasicBoardEdit> = async (data) => {
 
         try {
-            const res = await api.post(
-                isNew ? "api/boards/create/" : `api/boards/${slug}/edit/`,
-                data
-            )
 
-            dispatch(
-                showSnackbar({
-                    message: res.data['data'],
-                    severity: 'success',
-                })
-            );
+            const res = isNew ?
+                await api.post("api/boards/create/", data) :
+                await api.put(`api/boards/${slug}/edit/`, data)
+
+            dispatch(showSnackbar({
+                message: res.data['data'],
+                severity: 'success',
+            }));
 
             setShowForm(false)
             nav(`/boards/${res.data.slug}?refresh=${Date.now()}`, { replace: true })
@@ -98,15 +96,23 @@ const BoardCreateOrEditForm = ({ setShowForm, slug, basicDetail, isNew = false }
                         ? <CircularProgress />
                         :
                         <>
-                            <button
+                            <Button variant="contained" size="large" type='submit'>
+                                <SaveIcon className='me-1' /> Save Changes
+                            </Button>
+                            <Button variant="contained" size="large" color='error'
+                                onClick={() => setShowForm(false)}>
+                                <CloseIcon className='me-1' /> Close
+                            </Button>
+
+                            {/* <button
                                 type='submit'
-                                className="p-3 font-bold text-black transition cursor-pointer bg-primary hover:brightness-90">
+                                className="p-3 font-bold text-black transition rounded-md cursor-pointer bg-primary hover:brightness-90">
                                 <SaveIcon className='me-2' />Save Changes
                             </button>
                             <Button variant="contained" color='error'
                                 onClick={() => setShowForm(false)}>
                                 <CloseIcon className='me-2' />Close
-                            </Button>
+                            </Button> */}
                         </>
                     }
                 </div>

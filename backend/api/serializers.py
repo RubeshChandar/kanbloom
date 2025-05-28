@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 from rest_framework import serializers
 
 from .models import *
@@ -50,5 +49,14 @@ class BoardsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        exclude = ['id', 'is_archived', 'last_modified']
+        exclude = ['id', 'is_active', 'last_modified']
         read_only_fields = ['lastUpdated', 'slug']
+
+
+class TasksSerializer(serializers.ModelSerializer):
+    assigned_to = ShortendUserSerializer(read_only=True)
+    reported_by = ShortendUserSerializer(read_only=True)
+
+    class Meta:
+        model = Task
+        fields = "__all__"

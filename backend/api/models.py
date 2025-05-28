@@ -17,6 +17,11 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class ActiveBoardManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+
+
 class Board(BaseModel):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=300, null=True, blank=True)
@@ -24,7 +29,10 @@ class Board(BaseModel):
         User, on_delete=models.DO_NOTHING, related_name="owned_boards")
     members = models.ManyToManyField(User, related_name="member_boards")
     slug = AutoSlugField(populate_from='name', db_index=True, unique=True)
-    is_archived = models.BooleanField(default=False, db_index=True)
+    is_active = models.BooleanField(default=True, db_index=True)
+
+    objects = ActiveBoardManager()
+    all_objects = models.Manager()
 
     def __str__(self):
         return self.name.capitalize()

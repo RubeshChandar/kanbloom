@@ -5,37 +5,65 @@ import { CircularProgress } from "@mui/material";
 import Backdrop from '@mui/material/Backdrop';
 import api from "@src/api";
 import '@src/index.css';
+import { showSnackbar } from '@src/state/SnackBarSlice';
+import { RootState } from '@src/state/store';
 import { Board } from "@src/types/BoardTypes";
+import axios from 'axios';
 import { useEffect, useState } from "react";
-import { useLocation } from 'react-router-dom';
-import BoardEditForm from '../BoardEditForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+import BoardEditForm from '../BoardCreateOrEditForm';
 import BoardMembers from "./BoardMembers";
 import BoardProgress from "./BoardProgress";
+
 
 const BoardHero = ({ slug }: { slug: string }) => {
     const [board, setboard] = useState<Board | null>();
     const [isLoading, setIsLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
-    const location = useLocation()
+    const [isOwned, setIsOwned] = useState(false)
+    const location = useLocation();
+    const { currentUser } = useSelector((state: RootState) => state.currentUser)
+    const nav = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setIsLoading(true)
         api.get(`/api/boards/${slug}`)
-            .then(res => {
-                console.log(res.data)
+            .then((res: { data: Board }) => {
+                setIsOwned(currentUser?.user.id === res.data.owned_by.id)
                 return setboard(res.data)
             })
             .catch(e => console.log(e))
             .finally(() => setIsLoading(false))
-    }, [slug, location])
+    }, [slug, location, currentUser])
 
     if (isLoading || !board) {
-        return (
-            <Backdrop open={isLoading}>
-                < CircularProgress />
-            </Backdrop>
+        return <Backdrop open={isLoading}>
+            < CircularProgress />
+        </Backdrop>
+    }
 
-        );
+    const deleteBoard = async () => {
+        try {
+            const res = await api.delete(`/api/boards/delete/${board.slug}`)
+            dispatch(
+                showSnackbar({
+                    message: res.data['data'],
+                    severity: 'success',
+                })
+            );
+            nav('/')
+        }
+        catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 400) {
+                dispatch(showSnackbar({
+                    message: error.response.data['error'],
+                    severity: 'error',
+                }));
+            }
+            else console.log(error)
+        }
     }
 
     return (
@@ -66,18 +94,20 @@ const BoardHero = ({ slug }: { slug: string }) => {
                         {board.description}
                     </p>
 
-                    <div className="flex flex-row justify-start gap-[7%] mt-3">
-                        <button onClick={() => setShowForm(!showForm)}
-                            className="px-6 py-4 font-bold text-black transition cursor-pointer bg-neon rounded-xl hover:brightness-60">
-                            <EditIcon className="me-1" /> Edit Board
-                        </button>
-                        <button className="px-6 py-4 font-bold text-black transition bg-teal-400 cursor-pointer rounded-xl hover:brightness-60">
-                            <ManageAccountsIcon className="me-1" /> Manage members
-                        </button>
-                        <button className="px-6 py-4 font-bold text-black transition bg-red-500 cursor-pointer rounded-xl hover:brightness-60">
-                            <DeleteIcon className="me-1" /> Delete Board
-                        </button>
-                    </div>
+                    {isOwned &&
+                        <div className="flex flex-row justify-start gap-[7%] mt-3">
+                            <button onClick={() => setShowForm(!showForm)}
+                                className="px-6 py-4 font-bold text-black transition cursor-pointer bg-neon rounded-xl hover:brightness-60">
+                                <EditIcon className="me-1" /> Edit Board
+                            </button>
+                            <button className="px-6 py-4 font-bold text-black transition bg-teal-400 cursor-pointer rounded-xl hover:brightness-60">
+                                <ManageAccountsIcon className="me-1" /> Manage members
+                            </button>
+                            <button onClickCapture={deleteBoard} className="px-6 py-4 font-bold text-black transition bg-red-500 cursor-pointer rounded-xl hover:brightness-60">
+                                <DeleteIcon className="me-1" /> Delete Board
+                            </button>
+                        </div>
+                    }
                 </div>
 
                 <div className="col-span-2 "

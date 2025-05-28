@@ -14,7 +14,7 @@ export type ShortendUser = {
 }
 
 export type UserProfile = {
-    id: string;
+    profile_id: string;
     user: User;
     image?: string | null;
     title?: string | null;

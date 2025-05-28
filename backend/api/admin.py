@@ -1,9 +1,10 @@
 from django.contrib import admin
+
 from .models import *
 
 
 class BoardAdmin(admin.ModelAdmin):
-    list_display = ('name', 'owned_by', 'is_archived')
+    list_display = ('name', 'owned_by', 'is_active')
     readonly_fields = ('slug', 'last_modified', 'created_at', )
 
 
