@@ -6,6 +6,8 @@
 
 ## 🚀 Features
 
+### ✅ Completed Features
+
 - ✅ JWT authentication
 - ✅ Create boards, lists, and cards
 - ✅ Drag and drop cards across lists
@@ -19,6 +21,15 @@
 - ✅ Default filtering via custom model managers (`objects.all()` returns only active items, e.g. Board with `is_active=True`).
 - ✅ Pretty URLs using slugs for boards and tasks.
 - ✅ Dockerized for easy local and production use, with persistent volumes for Postgres, static, and media files.
+
+### 🛠️ Planned / Upcoming Features
+
+- Drag-and-drop UI polish
+- Board member invitations
+- Board/task activity logs
+- Notifications
+- Search and filtering capabilities
+- Real-time synchronization
 
 ---
 
@@ -48,12 +59,32 @@
 ## 🗂️ Project Structure
 
 ```
-/frontend          # React app
-/backend           # Django app
-/docker            # Docker/Docker Compose files
-/db_data           # Persistent Postgres data volume
-/backend/static    # Collected static files
-/backend/media     # Uploaded media files
+Kanbloom/
+├── backend/
+│ ├── api/ # Centralized API views and URL routing
+│ ├── board/ # Board app: models, serializers, business logic
+│ ├── task/ # Task app: models, serializers, business logic
+│ ├── media/ # Uploaded media files (user profile pictures, attachments)
+│ ├── static/ # Collected static files for production
+│ ├── db.sqlite3 # (if using SQLite for dev; otherwise, use Postgres via Docker)
+│ ├── manage.py
+│ └── ... # Other Django core files
+├── db_data/ # Persistent Postgres data volume (Docker)
+├── docker/ # Docker and Docker Compose configs
+├── frontend/
+│ ├── components/ # Reusable React components (cards, boards, forms, etc.)
+│ ├── pages/ # Top-level pages/routes (e.g., BoardPage, LoginPage)
+│ ├── types/ # TypeScript types and Zod schemas
+│ ├── App.tsx
+│ ├── main.tsx
+│ ├── tailwind.config.js
+│ ├── index.html
+│ └── ... # Other React/Vite config and asset files
+├── .env # Environment variables for both backend and frontend
+├── docker-compose.yml
+└── README.md
+
+
 ```
 
 > API URLs are centralized in `backend/api/urls.py`. Model managers control default filtering to return only active items by default.
@@ -86,7 +117,7 @@ pip install -r requirements.txt
 python manage.py runserver
 
 # Frontend
-cd ../frontend
+cd frontend
 npm install
 npm run dev
 ```

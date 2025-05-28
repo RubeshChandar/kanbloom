@@ -142,7 +142,7 @@ const BoardHero = ({ slug }: { slug: string }) => {
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     )
 }
 
