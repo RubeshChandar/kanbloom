@@ -1,16 +1,19 @@
 from collections import defaultdict
 
 from django.contrib.auth import get_user_model
-from django.db import connection
+from django.db import IntegrityError, connection
 from django.db.models import Count
 from django.template.defaultfilters import slugify
+from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Board, Task
-from .serializers import BoardsSerializer, TasksSerializer
+from .permissions import IsBoardMember
+from .serializers import (BoardsSerializer, ShortendTaskSerializer,
+                          TasksSerializer)
 
 User = get_user_model()
 
@@ -61,7 +64,7 @@ class get_boards(APIView):
 
 
 class board(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsBoardMember]
 
     def get_new_slug(self, name):
         base_slug = slugify(name)
@@ -80,8 +83,11 @@ class board(APIView):
 
         board = Board.objects.filter(slug=slug).first()
 
-        if not board:
-            return Response({'data': "Board not found check slug"}, status=status.HTTP_404_NOT_FOUND)
+        if board.owned_by != request.data:
+            return Response(
+                {'data': "You don't own the board to make change"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
         new_slug = self.get_new_slug(name) if name else slug
         if name and name != board.name:
@@ -107,11 +113,18 @@ class board(APIView):
         if not request.data.get('name'):
             return Response({'data': 'Name is a required field'}, status=status.HTTP_400_BAD_REQUEST)
 
-        board, created = Board.objects.get_or_create(
-            name=name,
-            description=description,
-            owned_by=request.user
-        )
+        try:
+            board, created = Board.objects.get_or_create(
+                name=name,
+                description=description,
+                owned_by=request.user
+            )
+
+        except IntegrityError as e:
+            return Response(
+                {'error': 'A board with this name already exists for you.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         board.members.add(request.user)
 
@@ -129,12 +142,6 @@ class board(APIView):
     def delete(self, request, slug):
         board = Board.objects.filter(slug=slug).first()
 
-        if not board:
-            return Response(
-                {"data": "Board not found"},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
         if request.user != board.owned_by:
             return Response(
                 {"error": f"{request.user} doesn't own '{board.name}' board"},
@@ -150,6 +157,7 @@ class board(APIView):
 
 
 class tasks(generics.ListAPIView):
+    permission_classes = [IsAuthenticated, IsBoardMember]
     serializer_class = TasksSerializer
 
     def get_queryset(self):
@@ -157,8 +165,42 @@ class tasks(generics.ListAPIView):
         return Task.objects.filter(board__slug=slug)
 
     def list(self, request, slug):
-        serializer = TasksSerializer(
-            self.get_queryset(), many=True,
-            context={'request': request}
-        )
+        only_status = request.query_params.get("only")
+
+        if only_status:
+            only_status = only_status.strip('"')
+            serializer = ShortendTaskSerializer(
+                self.get_queryset().filter(status=only_status), many=True,
+                context={'request': request}
+            )
+
+        else:
+            serializer = ShortendTaskSerializer(
+                self.get_queryset(), many=True,
+                context={'request': request}
+            )
+
+        print(len(connection.queries))
         return Response(serializer.data)
+
+
+class update_task_status(APIView):
+    permission_classes = [IsAuthenticated, IsBoardMember]
+
+    def post(self, request, slug):
+
+        task = Task.objects.get(id=request.data.get("task_id"))
+        status_to_be_updated = request.data.get("status")
+
+        if task.status == status_to_be_updated:
+            return Response({"warning": "Task status wasn't changed"}, status=status.HTTP_208_ALREADY_REPORTED)
+
+        if status_to_be_updated == "DONE":
+            task.completed_at = timezone.now()
+        else:
+            task.completed_at = None
+
+        task.status = status_to_be_updated
+        task.save()
+
+        return Response({"data": "Successfully changed Status"})

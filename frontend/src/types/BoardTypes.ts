@@ -1,20 +1,6 @@
 import { z } from 'zod';
+import { TaskStatus } from './TaskTypes';
 import { ShortendUser } from "./UserProfile";
-
-enum TaskStatus {
-    TO_DO = "TODO",
-    IN_PROGRESS = "INPROGRESS",
-    BLOCKED = "BLOCKED",
-    DONE = "DONE",
-};
-
-export const TaskStatusLabel: Record<TaskStatus, string> = {
-    [TaskStatus.TO_DO]: "To Do",
-    [TaskStatus.IN_PROGRESS]: "In Progress",
-    [TaskStatus.BLOCKED]: "Blocked",
-    [TaskStatus.DONE]: "Done",
-};
-
 
 export type TaskCount = {
     "TODO": number,
@@ -35,6 +21,12 @@ export type Board = {
     created_at?: string
 }
 
+export type ColumnsT = {
+    id: TaskStatus,
+    title: string,
+    color: string,
+    hoverColor?: string,
+}
 
 export const BasicBoardEditSchema = z.object({
     name: z.string()

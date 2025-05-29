@@ -2,6 +2,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { CircularProgress } from "@mui/material";
+
 import Backdrop from '@mui/material/Backdrop';
 import api from "@src/api";
 import '@src/index.css';
@@ -67,8 +68,7 @@ const BoardHero = ({ slug }: { slug: string }) => {
     }
 
     return (
-        <div className="flex items-center px-20 py-10 bg-white/10" >
-
+        <>
             <Backdrop
                 open={showForm}
                 sx={{
@@ -84,65 +84,69 @@ const BoardHero = ({ slug }: { slug: string }) => {
                 />
             </Backdrop>
 
-            <div className="grid w-full grid-cols-6 gap-10">
 
-                <div className="flex flex-col justify-center col-span-4 space-y-6">
-                    <h1 className="text-5xl font-bold leading-tight text-neon">
-                        {board.name}
-                    </h1>
-                    <p className="max-w-xl text-lg font-extrabold whitespace-pre-line text-secondary">
-                        {board.description}
-                    </p>
+            <div className="flex items-center px-20 py-10 " >
+                <div className="grid w-full grid-cols-6 gap-10">
 
-                    {isOwned &&
-                        <div className="flex flex-row justify-start gap-[7%] mt-3">
-                            <button onClick={() => setShowForm(!showForm)}
-                                className="px-6 py-4 font-bold text-black transition cursor-pointer bg-neon rounded-xl hover:brightness-60">
-                                <EditIcon className="me-1" /> Edit Board
-                            </button>
-                            <button className="px-6 py-4 font-bold text-black transition bg-teal-400 cursor-pointer rounded-xl hover:brightness-60">
-                                <ManageAccountsIcon className="me-1" /> Manage members
-                            </button>
-                            <button onClickCapture={deleteBoard} className="px-6 py-4 font-bold text-black transition bg-red-500 cursor-pointer rounded-xl hover:brightness-60">
-                                <DeleteIcon className="me-1" /> Delete Board
-                            </button>
-                        </div>
-                    }
-                </div>
+                    <div className="flex flex-col justify-center col-span-4 space-y-6">
+                        <h1 className="text-5xl font-bold leading-tight text-neon">
+                            {board.name}
+                        </h1>
+                        <p className="max-w-xl text-lg font-extrabold whitespace-pre-line text-secondary">
+                            {board.description}
+                        </p>
 
-                <div className="col-span-2 "
-                >
-                    <BoardMembers
-                        owner={board.owned_by}
-                        members={board.members}
-                    />
-                </div>
+                        {isOwned &&
+                            <div className="flex flex-row justify-start gap-[7%] mt-3">
+                                <button onClick={() => setShowForm(!showForm)}
+                                    className="px-6 py-4 font-bold text-black transition cursor-pointer bg-neon rounded-xl hover:brightness-60">
+                                    <EditIcon className="me-1" /> Edit Board
+                                </button>
+                                <button className="px-6 py-4 font-bold text-black transition bg-teal-400 cursor-pointer rounded-xl hover:brightness-60">
+                                    <ManageAccountsIcon className="me-1" /> Manage members
+                                </button>
+                                <button onClickCapture={deleteBoard} className="px-6 py-4 font-bold text-black transition bg-red-500 cursor-pointer rounded-xl hover:brightness-60">
+                                    <DeleteIcon className="me-1" /> Delete Board
+                                </button>
+                            </div>
+                        }
+                    </div>
 
-                <div className="col-span-3">
-                    <BoardProgress
-                        taskCount={board.taskCount}
-                        totalTasks={board.totalTasks}
-                    />
-                </div>
+                    <div className="col-span-2 "
+                    >
+                        <BoardMembers
+                            owner={board.owned_by}
+                            members={board.members}
+                        />
+                    </div>
 
-                <div className="col-span-2 col-start-5">
-                    <div className="flex flex-col gap-3 p-5 border text-md bg-white/10 border-white/20 rounded-xl">
-                        <div className="flex justify-between font-medium text-red-400">
-                            <span>Created at:</span>
-                            <span className="font-semibold text-white">{board.created_at}</span>
-                        </div>
-                        <div className="flex justify-between font-medium text-red-400">
-                            <span>Last updated:</span>
-                            <span className="font-semibold text-white">{board.lastUpdated}</span>
-                        </div>
-                        <div className="flex justify-between pt-3 mt-2 font-medium text-red-400 border-t border-white/80">
-                            <span>Total Tasks:</span>
-                            <span className="font-bold text-teal-400">{board.totalTasks}</span>
+                    <div className="col-span-3">
+                        <BoardProgress
+                            taskCount={board.taskCount}
+                            totalTasks={board.totalTasks}
+                        />
+                    </div>
+
+                    <div className="col-span-2 col-start-5">
+                        <div className="flex flex-col gap-3 p-5 border text-md bg-white/10 border-white/20 rounded-xl">
+                            <div className="flex justify-between font-medium text-red-400">
+                                <span>Created at:</span>
+                                <span className="font-semibold text-white">{board.created_at}</span>
+                            </div>
+                            <div className="flex justify-between font-medium text-red-400">
+                                <span>Last updated:</span>
+                                <span className="font-semibold text-white">{board.lastUpdated}</span>
+                            </div>
+                            <div className="flex justify-between pt-3 mt-2 font-medium text-red-400 border-t border-white/80">
+                                <span>Total Tasks:</span>
+                                <span className="font-bold text-teal-400">{board.totalTasks}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        </>
     )
 }
 

@@ -84,4 +84,4 @@ class Task(BaseModel):
         return result
 
     class Meta:
-        ordering = ["-last_modified", "-priority"]
+        ordering = ["-priority", "-last_modified"]

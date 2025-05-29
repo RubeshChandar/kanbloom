@@ -1,10 +1,11 @@
 import { Chip, Tooltip } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
+import { TaskStatusLabel } from '@src/types/TaskTypes';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from '../state/store';
-import { Board, TaskCount, TaskStatusLabel } from '../types/BoardTypes';
+import { Board, TaskCount } from '../types/BoardTypes';
 import { LinearProgressWithLabel } from "../utils/ProgressWithLabel";
 
 

@@ -12,6 +12,8 @@ urlpatterns = [
 
 tasks_urlpatterns = [
     path("<str:slug>/tasks/", views.tasks.as_view()),
+    path("<str:slug>/tasks/update-status/",
+         views.update_task_status.as_view()),
 ]
 
 
