@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import BoardMembersReducer from './BoardMembersSlice';
 import SearchReducer from './SearchBarSlice';
 import snackBarReducer from './SnackBarSlice';
+import TasksReducer from './TasksSlice';
 import currentUserReducer from './UserProfile';
 
 export const store = configureStore({
@@ -10,6 +11,7 @@ export const store = configureStore({
         currentUser: currentUserReducer,
         search: SearchReducer,
         boardMembers: BoardMembersReducer,
+        Tasks: TasksReducer,
     }
 })
 

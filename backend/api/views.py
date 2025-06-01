@@ -6,9 +6,11 @@ from django.db.models import Count
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from rest_framework import generics, status
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
 from .models import Board, Task
 from .permissions import IsBoardMember
@@ -187,9 +189,8 @@ class tasks(generics.ListAPIView):
 class update_task_status(APIView):
     permission_classes = [IsAuthenticated, IsBoardMember]
 
-    def post(self, request, slug):
-
-        task = Task.objects.get(id=request.data.get("task_id"))
+    def post(self, request, slug, task_id):
+        task = Task.objects.get(id=task_id)
         status_to_be_updated = request.data.get("status")
 
         if task.status == status_to_be_updated:
@@ -204,3 +205,9 @@ class update_task_status(APIView):
         task.save()
 
         return Response({"data": "Successfully changed Status"})
+
+    def patch(self, request, slug, task_id):
+        task = Task.objects.get(id=task_id)
+        assigned_to, priority = request.data.get(
+            "assigned_to"), request.data.get("priority")
+        pass

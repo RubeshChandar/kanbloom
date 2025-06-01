@@ -2,43 +2,12 @@ import { useDroppable } from "@dnd-kit/core";
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Button from "@mui/material/Button";
-import api from "@src/api";
 import '@src/index.css';
-import { showSnackbar } from "@src/state/SnackBarSlice";
 import { ColumnsT } from "@src/types/BoardTypes";
 import { ShortendTask } from "@src/types/TaskTypes";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
 import TaskCard from "./TaskCard";
 
-const Column = ({ column }: { column: ColumnsT }) => {
-    const { slug } = useParams<{ slug: string }>();
-    const dispatch = useDispatch()
-    const [tasks, setTasks] = useState<ShortendTask[]>([]);
-    const location = useLocation()
-
-    useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const res = (await api.get(`api/${slug}/tasks?only=${column.id}`)).data as ShortendTask[];
-                setTasks(res)
-            }
-            catch (error) {
-                if (axios.isAxiosError(error)) {
-                    dispatch(showSnackbar({
-                        message: error.response?.data['message'],
-                        severity: "error"
-                    }))
-                }
-            }
-
-        }
-
-        fetchTasks()
-    }, [slug, dispatch, column.id, location])
-
+const Column = ({ column, tasks }: { column: ColumnsT, tasks: ShortendTask[] }) => {
     const { setNodeRef, isOver } = useDroppable({ id: column.id })
 
     return (

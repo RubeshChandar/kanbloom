@@ -2,8 +2,10 @@ import AddIcon from '@mui/icons-material/Add';
 import Backdrop from '@mui/material/Backdrop';
 import Fab from '@mui/material/Fab';
 import BoardEditForm from '@src/components/BoardCreateOrEditForm';
+import { showSnackbar } from '@src/state/SnackBarSlice';
+import axios from 'axios';
 import { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import api from "../api";
 import BoardCard from "../components/BoardCard";
 import { BoardCardSkeleton } from "../components/BoardCardSkeleton";
@@ -16,6 +18,8 @@ const HomePage = () => {
     const [showForm, setShowForm] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const searchTerm = useSelector((state: RootState) => state.search)
+    const dispatch = useDispatch()
+
     useEffect(() => {
         setIsLoading(true)
         const fetchAllBoards = async () => {
@@ -25,13 +29,16 @@ const HomePage = () => {
             }
             catch (error) {
                 console.log(error)
+                if (axios.isAxiosError(error) && error.status == 401) {
+                    dispatch(showSnackbar({ severity: "warning", message: "Kindly refresh the page" }))
+                }
             } finally {
                 setIsLoading(false)
             }
         }
 
         fetchAllBoards()
-    }, [])
+    }, [dispatch])
 
     const boards = useMemo(() =>
         allBoards?.filter((board) => {
