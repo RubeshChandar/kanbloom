@@ -57,7 +57,7 @@ class get_boards(APIView):
             data['taskCount'] = boards_status[localslug]
             data['totalTasks'] = sum(data['taskCount'].values())
 
-        print(len(connection.queries))
+        print("Get boards-> ", len(connection.queries))
 
         # Here I'm returning just the first object if slug was provided
         return Response(res.data[0] if slug else res.data)
@@ -180,7 +180,7 @@ class tasks(generics.ListAPIView):
                 context={'request': request}
             )
 
-        print(len(connection.queries))
+        print("List of tasks -> ", len(connection.queries))
         return Response(serializer.data)
 
 

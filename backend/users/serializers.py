@@ -46,6 +46,7 @@ class UserProfileSerialiser(serializers.ModelSerializer):
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["profile_id"] = rep.pop("id")
+        rep["imageURL"] = rep.pop("image")
         request = self.context.get("request")
 
         if request and (request.user.id == instance.user.id):

@@ -39,3 +39,21 @@ export const TextFieldStyle: SxProps<Theme> = {
         borderColor: theme.palette.custom.neon,
     },
 }
+
+export const MenuStyle = {
+    paper: {
+        sx: {
+            minWidth: 180,
+            bgcolor: theme.palette.custom.blueey,
+            color: "#fff",
+            boxShadow: "0 2px 14px 2px rgba(0,0,0,0.25)",
+            zIndex: 1401,
+            "& .MuiMenuItem-root": {
+                "&.Mui-selected, &:hover": {
+                    bgcolor: "#232526",
+                    color: "#fff"
+                }
+            }
+        }
+    }
+}

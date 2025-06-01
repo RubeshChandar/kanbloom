@@ -43,7 +43,7 @@ const Column = ({ column }: { column: ColumnsT }) => {
 
     return (
         <div
-            className={`bg-[#181A1B] rounded-3xl flex flex-col flex-1 border-2 custom-scroll-bar 
+            className={`bg-[#181A1B] rounded-3xl flex flex-col flex-1 border-2 custom-scroll-bar
                 ${column.color} p-5 transition-shadow duration-150 
                 ${isOver ? column.hoverColor : ""}`}
             ref={setNodeRef}

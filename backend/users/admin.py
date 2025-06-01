@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import CustomUser, UserProfile
 
 
@@ -9,6 +10,7 @@ class UserAdmin(admin.ModelAdmin):
 
 class UserProfileAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "last_modified")
+    readonly_fields = ("id",)
 
 
 admin.site.register(CustomUser, UserAdmin)

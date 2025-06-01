@@ -70,7 +70,7 @@ class Task(BaseModel):
 
     # Reporting
     assigned_to = models.ForeignKey(
-        User, related_name="assigned_tasks", on_delete=models.DO_NOTHING, blank=True)
+        User, related_name="assigned_tasks", on_delete=models.DO_NOTHING, blank=True, null=True)
     reported_by = models.ForeignKey(
         User, on_delete=models.DO_NOTHING, related_name="reported_tasks")
 
@@ -84,4 +84,4 @@ class Task(BaseModel):
         return result
 
     class Meta:
-        ordering = ["-priority", "-last_modified"]
+        ordering = ["-priority", "due_date"]

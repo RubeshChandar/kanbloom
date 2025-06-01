@@ -1,6 +1,7 @@
 import uuid
-from django.db import models
+
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 
 class CustomUser(AbstractUser):
@@ -29,7 +30,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE, related_name="user_profile"
     )
-    image = models.ImageField(upload_to=user_profile_photo_path, blank=True, null=True)
+    image = models.ImageField(
+        upload_to=user_profile_photo_path, blank=True, null=True)
     title = models.CharField(max_length=500, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
@@ -39,6 +41,13 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{str(self.user.username).capitalize()}'s profile"
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_instance = UserProfile.objects.filter(pk=self.pk).first()
+            if old_instance and old_instance.image and old_instance.image != self.image:
+                old_instance.image.delete(save=False)
+        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         if self.image:

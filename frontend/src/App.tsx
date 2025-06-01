@@ -1,11 +1,12 @@
 import { Route, Routes } from "react-router-dom";
+import GlobalSnackBar from "./components/GlobalSnackBar";
 import AuthLayout from "./layouts/AuthLayout";
 import MainLayout from "./layouts/MainLayout";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import GlobalSnackBar from "./components/GlobalSnackBar";
-import HomePage from "./pages/HomePage";
 import BoardPage from "./pages/BoardPage";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import ProfilePage from "./pages/ProfilePage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="/boards/:slug" element={<BoardPage />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
 
       </Routes>

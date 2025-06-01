@@ -5,16 +5,11 @@ import FaceRetouchingNaturalIcon from '@mui/icons-material/FaceRetouchingNatural
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
 
+import theme from '@src/styles/MaterialTheme';
+import { UserProfile } from '@src/types/UserProfile';
+import { logout } from '@src/utils/TokenHandler';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api';
-import { clearCurrentUser } from '../../state/UserProfile';
-import theme from '../../styles/MaterialTheme';
-import { REFRESH_TOKEN } from '../../types/Constants';
-import { UserProfile } from '../../types/UserProfile';
-import { ClearTokens } from '../../utils/TokenHandler';
-
-
 
 const NavProfile = ({ userProfile }: { userProfile: UserProfile; }) => {
     const [anchorEl, setAnchorEL] = useState<HTMLElement | null>(null);
@@ -27,38 +22,17 @@ const NavProfile = ({ userProfile }: { userProfile: UserProfile; }) => {
 
     const nav = useNavigate()
     const dispatch = useDispatch()
-    const logout = async () => {
-
-        try {
-            const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-            if (!refreshToken) {
-                nav("/login");
-                return;
-            }
-            await api.post("user/token/logout/", { refresh: refreshToken });
-        }
-
-        catch (error) {
-            console.error("Failed to logout:", error);
-        }
-
-        finally {
-            ClearTokens()
-            dispatch(clearCurrentUser())
-            nav("/login");
-        }
-    }
 
     const menuOptions = [
-        { label: 'Profile', icon: <FaceRetouchingNaturalIcon /> },
+        { label: 'Profile', icon: <FaceRetouchingNaturalIcon />, method: () => { nav("/profile") } },
         { label: 'Connections', icon: <CableIcon /> },
-        { label: 'Logout', icon: <LogoutIcon />, method: logout }
+        { label: 'Logout', icon: <LogoutIcon />, method: () => logout(nav, dispatch) }
     ]
 
     return (
         <>
             <Tooltip title="Open Menu">
-                <Avatar onClick={openUserMenu} src={userProfile?.image ?? ""} className='cursor-pointer'
+                <Avatar onClick={openUserMenu} src={userProfile?.imageURL ?? ""} className='cursor-pointer'
                     sx={{ width: 55, height: 55 }} />
             </Tooltip>
 
