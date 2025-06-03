@@ -13,7 +13,7 @@ class BoardAdmin(admin.ModelAdmin):
 
 class TasksAdmin(admin.ModelAdmin):
     list_display = ('name', 'board', 'priority', 'status')
-    readonly_fields = ('last_modified', 'created_at')
+    readonly_fields = ('last_modified', 'created_at', 'id')
 
 
 admin.site.register(Board, BoardAdmin)

@@ -9,12 +9,12 @@ export enum TaskStatus {
 
 export type ShortendTask = {
     task_id: string,
-    assigned_to: ShortendUser,
+    assigned_to?: ShortendUser,
     name: string,
     status: TaskStatus,
     priority: number,
     completed_at?: string,
-    due_date?: string,
+    due_date: string,
 }
 
 export type Task = ShortendTask & {
@@ -31,3 +31,4 @@ export const TaskStatusLabel: Record<TaskStatus, string> = {
     [TaskStatus.BLOCKED]: "Blocked",
     [TaskStatus.DONE]: "Done",
 };
+

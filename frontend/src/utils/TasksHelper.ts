@@ -44,3 +44,28 @@ export const updateTaskStatusBackend = async (slug: string, dispatch: Dispatch, 
             }))
         })
 }
+
+type UpdateTaskDetailsTypeBackend = {
+    task_id: string,
+    assigned_to_id?: string,
+    due_date?: string,
+    priority?: number,
+}
+
+export const updateTaskDetailBackend = async (slug: string, dispatch: Dispatch, taskDetails: UpdateTaskDetailsTypeBackend) => {
+    api
+        .patch(`api/${slug}/tasks/update-status/${taskDetails.task_id}/`, taskDetails)
+        .then((res) => {
+            dispatch(showSnackbar({
+                message: res.data['data'],
+                severity: "success"
+            }))
+        })
+        .catch(error => {
+            console.log(error)
+            dispatch(showSnackbar({
+                message: "Error Occured please refresh to see the actual data",
+                severity: "error"
+            }))
+        })
+}

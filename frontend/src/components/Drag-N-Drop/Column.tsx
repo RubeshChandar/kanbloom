@@ -1,3 +1,4 @@
+// If you haven't already, install Framer Motion by running: npm install framer-motion
 import { useDroppable } from "@dnd-kit/core";
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -5,6 +6,7 @@ import Button from "@mui/material/Button";
 import '@src/index.css';
 import { ColumnsT } from "@src/types/BoardTypes";
 import { ShortendTask } from "@src/types/TaskTypes";
+import { AnimatePresence, motion } from "framer-motion";
 import TaskCard from "./TaskCard";
 
 const Column = ({ column, tasks }: { column: ColumnsT, tasks: ShortendTask[] }) => {
@@ -39,13 +41,30 @@ const Column = ({ column, tasks }: { column: ColumnsT, tasks: ShortendTask[] }) 
                 </div>
             </div>
             <div className="flex flex-col gap-5">
-                {tasks.length === 0 ? (
-                    <div className="text-center text-gray-500 py-6 italic">
-                        No tasks
-                    </div>
-                ) : tasks.map(task =>
-                    <TaskCard task={task} key={task.task_id} />
-                )}
+                <AnimatePresence>
+                    {tasks.length === 0 ? (
+                        <motion.div
+                            key="notasks"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="text-center text-gray-500 py-6 italic"
+                        >
+                            No tasks
+                        </motion.div>
+                    ) : tasks.map(task => (
+                        <motion.div
+                            key={task.task_id}
+                            layout
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 28, mass: 0.4, duration: 0.13 }}
+                        >
+                            <TaskCard task={task} />
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
             </div>
         </div>
     )

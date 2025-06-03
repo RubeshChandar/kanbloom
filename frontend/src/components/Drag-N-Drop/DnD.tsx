@@ -4,6 +4,7 @@ import { clearTasks, updateTaskStatus } from "@src/state/TasksSlice";
 import { ColumnsT } from "@src/types/BoardTypes";
 import { TaskStatus, TaskStatusLabel } from "@src/types/TaskTypes";
 import { fetchTasksAndUsers, updateTaskStatusBackend } from "@src/utils/TasksHelper";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Column from "./Column";
@@ -44,7 +45,7 @@ const DnD = ({ slug }: { slug: string }) => {
             PointerSensor, {
             activationConstraint: {
                 distance: 6,
-                delay: 100,
+                delay: 150,
                 tolerance: 5
             }
         }),
@@ -53,7 +54,7 @@ const DnD = ({ slug }: { slug: string }) => {
 
     return (
         <>
-            <div className="flex w-full gap-6 px-2 py-6 justify-center">
+            <div className="flex w-full gap-6 px-2 py-6 justify-center overflow-hidden">
                 <DndContext
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
@@ -62,17 +63,28 @@ const DnD = ({ slug }: { slug: string }) => {
                         Columns.map(
                             (column) =>
                                 <Column key={column.id} column={column}
-                                    tasks={allTasks.filter(task => task.status === column.id)} />
+                                    tasks={allTasks
+                                        .filter(task => task.status === column.id)
+                                        .sort((a, b) => (b.priority) - (a.priority))
+                                    } />
                         )
                     }
                     <DragOverlay
                         dropAnimation={{
-                            duration: 150,
+                            duration: 100,
                             easing: 'cubic-bezier(0.18, 0.67,0.6,1.22)'
                         }}>
-                        {activeId ?
-                            <TaskCard task={allTasks.find(task => task.task_id === activeId)!} />
-                            : null}
+                        {activeId ? (
+                            <motion.div
+                                initial={{ scale: 0.93, opacity: 0.7, y: 18 }}
+                                animate={{ scale: 1, opacity: 1, y: 0 }}
+                                exit={{ scale: 0.93, opacity: 0.7, y: 18 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 38, mass: 0.5, duration: 0.15 }}
+                                style={{ zIndex: 9999 }}
+                            >
+                                <TaskCard task={allTasks.find(task => task.task_id === activeId)!} />
+                            </motion.div>
+                        ) : null}
                     </DragOverlay>
 
                 </DndContext>

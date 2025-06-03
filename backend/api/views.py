@@ -1,16 +1,15 @@
 from collections import defaultdict
 
 from django.contrib.auth import get_user_model
-from django.db import IntegrityError, connection
+from django.db import IntegrityError, connection, transaction
 from django.db.models import Count
 from django.template.defaultfilters import slugify
 from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from rest_framework import generics, status
-from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
 
 from .models import Board, Task
 from .permissions import IsBoardMember
@@ -190,24 +189,40 @@ class update_task_status(APIView):
     permission_classes = [IsAuthenticated, IsBoardMember]
 
     def post(self, request, slug, task_id):
-        task = Task.objects.get(id=task_id)
-        status_to_be_updated = request.data.get("status")
+        with transaction.atomic():
+            task = Task.objects.select_for_update().get(id=task_id)
+            status_to_be_updated = request.data.get("status")
 
-        if task.status == status_to_be_updated:
-            return Response({"warning": "Task status wasn't changed"}, status=status.HTTP_208_ALREADY_REPORTED)
+            if task.status == status_to_be_updated:
+                return Response({"warning": "Task status wasn't changed"}, status=status.HTTP_208_ALREADY_REPORTED)
 
-        if status_to_be_updated == "DONE":
-            task.completed_at = timezone.now()
-        else:
-            task.completed_at = None
+            task.completed_at = timezone.now() if status_to_be_updated == "DONE" else None
 
-        task.status = status_to_be_updated
-        task.save()
+            task.status = status_to_be_updated
+            task.save()
 
-        return Response({"data": "Successfully changed Status"})
+        return Response({"data": "Successfully changed Status"}, status=status.HTTP_200_OK)
 
     def patch(self, request, slug, task_id):
-        task = Task.objects.get(id=task_id)
-        assigned_to, priority = request.data.get(
-            "assigned_to"), request.data.get("priority")
-        pass
+        assigned_to, priority, due_date = [request.data.get(k)
+                                           for k in ["assigned_to_id", "priority", "due_date"]]
+
+        try:
+            with transaction.atomic():
+                task = Task.objects.select_for_update().get(id=task_id)
+
+                if "assigned_to_id" in request.data:
+                    task.assigned_to_id = assigned_to if assigned_to != "undefined" else None
+
+                if "priority" in request.data:
+                    task.priority = priority
+
+                if "due_date" in request.data:
+                    task.due_date = parse_datetime(due_date)\
+                        if due_date != "undefined" else timezone.now()
+
+                task.save()
+            return Response({"data": "Updated the Task status"})
+
+        except Exception as e:
+            return Response({"error": f"A server error occured {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

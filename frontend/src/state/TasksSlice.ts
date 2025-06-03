@@ -1,5 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ShortendTask, TaskStatus } from "@src/types/TaskTypes";
+import { ShortendUser } from "@src/types/UserProfile";
+
+export type UpdateTaskDetailsType = {
+    task_id: string,
+    assignedTo?: ShortendUser | undefined,
+    priority?: number,
+    dueDate?: string,
+}
 
 const initialState: ShortendTask[] = [];
 
@@ -17,9 +25,25 @@ const TasksSlice = createSlice({
             } else {
                 taskToBeUpdated!.completed_at = undefined
             }
+        },
+        updateTaskDetails: (state, action: PayloadAction<UpdateTaskDetailsType>) => {
+            const task = state.find(task => task.task_id === action.payload.task_id)
+            if (!task) return
+
+            if ("assignedTo" in action.payload) {
+                task.assigned_to = action.payload.assignedTo;
+            }
+
+            if (action.payload.dueDate) {
+                task.due_date = action.payload.dueDate
+            }
+
+            if (action.payload.priority) {
+                task.priority = action.payload.priority
+            }
         }
     },
 })
 
 export default TasksSlice.reducer
-export const { clearTasks, setTasks, updateTaskStatus } = TasksSlice.actions
+export const { clearTasks, setTasks, updateTaskStatus, updateTaskDetails } = TasksSlice.actions

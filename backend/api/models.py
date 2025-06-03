@@ -64,7 +64,7 @@ class Task(BaseModel):
     status = models.CharField(
         max_length=20, choices=Status.choices, default=Status.TO_DO)
     completed_at = models.DateTimeField(null=True, blank=True)
-    due_date = models.DateTimeField(blank=True, null=True)
+    due_date = models.DateTimeField()
     priority = models.IntegerField(
         choices=Priority.choices, default=Priority.MEDIUM)
 
