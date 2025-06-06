@@ -32,3 +32,12 @@ export const TaskStatusLabel: Record<TaskStatus, string> = {
     [TaskStatus.DONE]: "Done",
 };
 
+export type priorityNum = 1 | 2 | 3 | 4
+
+export const priorityMap: Record<priorityNum, { label: string; color: string }> = {
+    1: { label: "Low", color: "bg-blue-100 text-blue-700 border-blue-400" },
+    2: { label: "Medium", color: "bg-yellow-100 text-yellow-700 border-yellow-400" },
+    3: { label: "High", color: "bg-orange-200 text-orange-800 border-orange-400" },
+    4: { label: "Critical", color: "bg-red-300 text-red-900 border-red-500" },
+};
+

@@ -2,6 +2,7 @@ from api.models import Board
 from api.permissions import IsBoardMember
 from django.contrib.auth import get_user_model
 from django.db import connection
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.decorators import api_view, permission_classes
@@ -40,6 +41,53 @@ def get_user_profile(request, pk):
     userProf = UserProfile.objects.all()
     res = UserProfileSerialiser(userProf, many=True)
     return Response(res.data)
+
+
+class manage_board_members(APIView):
+    permission_classes = [IsAuthenticated, IsBoardMember]
+
+    def get(self, request, slug):
+        search = request.query_params.get("search_term")
+        board_members = Board.objects.get(
+            slug=slug).members.values_list('id', flat=True)
+
+        if not search:
+            return Response({"warning": "Search term wasn't provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        users = User.objects.filter(
+            Q(username__icontains=search) |
+            Q(email__icontains=search) |
+            Q(user_profile__title__icontains=search)
+        ).exclude(id__in=board_members)
+
+        res = ShortendUserSerializer(
+            users, many=True, context={"request": request})
+
+        return Response(res.data)
+
+    def delete(self, request, slug):
+        user_id = request.query_params.get("user_id")
+
+        if not user_id:
+            return Response({"warning": "User's ID wasn't provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        board = Board.objects.get(slug=slug)
+        board.members.remove(user_id)
+        res = ShortendUserSerializer(
+            board.members, many=True, context={"request": request})
+        return Response(res.data)
+
+    def post(self, request, slug):
+        user_id = request.data.get("user_id")
+
+        if not user_id:
+            return Response({"warning": "User's ID wasn't provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        board = Board.objects.get(slug=slug)
+        board.members.add(user_id)
+        res = ShortendUserSerializer(
+            board.members, many=True, context={"request": request})
+        return Response(res.data)
 
 
 class BoardUsers(APIView):

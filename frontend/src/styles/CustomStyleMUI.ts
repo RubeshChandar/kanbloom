@@ -57,3 +57,57 @@ export const MenuStyle = {
         }
     }
 }
+
+
+export const DateTimePickerStyle = {
+    sx: {
+        '& .MuiPaper-root, & .MuiClock-root': {
+            backgroundColor: '#333333',
+            color: theme.palette.text.primary,
+        },
+        '& .MuiPickersToolbar-root, & .MuiClockNumber-root.Mui-selected': {
+            backgroundColor: '#222222',
+            color: theme.palette.text.primary,
+        },
+        '& .MuiPickersCalendarHeader-root, & .MuiIconButton-root, & .MuiPickersDay-root, & .MuiClockNumber-root': {
+            color: theme.palette.text.primary,
+        },
+        '& .MuiPickersDay-root.Mui-selected': {
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.text.primary,
+        },
+        '& .MuiPickersDay-root:focus.Mui-selected': {
+            backgroundColor: theme.palette.primary.dark,
+        },
+        '& .MuiPickersDay-root.MuiPickersDay-today': {
+            borderColor: theme.palette.primary.main,
+        },
+        '& .MuiPickersDay-root.Mui-disabled': {
+            color: theme.palette.text.secondary,
+        },
+        '& .MuiPickersDay-root:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+        },
+        '& .MuiClock-pin, & .MuiClockPointer-root': {
+            backgroundColor: theme.palette.primary.main,
+        },
+        '& .MuiDialogActions-root .MuiButton-root': {
+            color: theme.palette.primary.main,
+        },
+    },
+
+}
+
+export const getFieldStyles = {
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+            borderColor: 'white',
+        },
+        '&:hover fieldset': {
+            borderColor: '#39FF14',
+        },
+        '&.Mui-focused fieldset': {
+            borderColor: '#39FF14',
+        },
+    }
+}

@@ -10,18 +10,21 @@ import { showSnackbar } from '@src/state/SnackBarSlice';
 import { RootState } from '@src/state/store';
 import { Board } from "@src/types/BoardTypes";
 import axios from 'axios';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BoardEditForm from '../BoardCreateOrEditForm';
 import BoardMembers from "./BoardMembers";
 import BoardProgress from "./BoardProgress";
+import ManageBoardMembers from './ManageBoardMembers';
 
 
 const BoardHero = ({ slug }: { slug: string }) => {
     const [board, setboard] = useState<Board | null>();
     const [isLoading, setIsLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
+    const [showMemManForm, setshowMemManForm] = useState(false);
     const [isOwned, setIsOwned] = useState(false)
     const location = useLocation();
     const { currentUser } = useSelector((state: RootState) => state.currentUser)
@@ -40,9 +43,11 @@ const BoardHero = ({ slug }: { slug: string }) => {
     }, [slug, location, currentUser])
 
     if (isLoading || !board) {
-        return <Backdrop open={isLoading}>
-            < CircularProgress />
-        </Backdrop>
+        return (
+            <Backdrop open={isLoading}>
+                < CircularProgress />
+            </Backdrop>
+        )
     }
 
     const deleteBoard = async () => {
@@ -70,21 +75,39 @@ const BoardHero = ({ slug }: { slug: string }) => {
     return (
         <>
             <Backdrop
-                open={showForm}
+                open={showForm || showMemManForm}
                 sx={{
                     zIndex: (theme) => theme.zIndex.modal + 1,
                     backdropFilter: 'blur(8px)',
                     backgroundColor: 'rgba(0, 0, 0, 0.2)',
                 }}
             >
-                <BoardEditForm
-                    slug={board.slug}
-                    setShowForm={setShowForm}
-                    basicDetail={{ name: board.name, description: board.description }}
-                />
+                <AnimatePresence>
+                    {(showForm || showMemManForm) && (
+                        <motion.div
+                            key={showForm ? "edit" : "members"}
+                            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 30 }}
+                            transition={{ duration: 0.25, type: "spring", stiffness: 150 }}
+                            style={{ width: "100%", maxWidth: 540 }}
+                        >
+                            {showForm ?
+                                <BoardEditForm
+                                    slug={board.slug}
+                                    setShowForm={setShowForm}
+                                    basicDetail={{ name: board.name, description: board.description }}
+                                />
+                                :
+                                <ManageBoardMembers
+                                    slug={slug!}
+                                    owner={board.owned_by}
+                                    closeForm={setshowMemManForm} />
+                            }
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </Backdrop>
-
-
             <div className="flex items-center px-20 py-10 " >
                 <div className="grid w-full grid-cols-6 gap-10">
 
@@ -102,7 +125,8 @@ const BoardHero = ({ slug }: { slug: string }) => {
                                     className="px-6 py-4 font-bold text-black transition cursor-pointer bg-neon rounded-xl hover:brightness-60">
                                     <EditIcon className="me-1" /> Edit Board
                                 </button>
-                                <button className="px-6 py-4 font-bold text-black transition bg-teal-400 cursor-pointer rounded-xl hover:brightness-60">
+                                <button onClick={() => setshowMemManForm(!showMemManForm)}
+                                    className="px-6 py-4 font-bold text-black transition bg-teal-400 cursor-pointer rounded-xl hover:brightness-60">
                                     <ManageAccountsIcon className="me-1" /> Manage members
                                 </button>
                                 <button onClickCapture={deleteBoard} className="px-6 py-4 font-bold text-black transition bg-red-500 cursor-pointer rounded-xl hover:brightness-60">
@@ -114,17 +138,11 @@ const BoardHero = ({ slug }: { slug: string }) => {
 
                     <div className="col-span-2 "
                     >
-                        <BoardMembers
-                            owner={board.owned_by}
-                            members={board.members}
-                        />
+                        <BoardMembers owner={board.owned_by} />
                     </div>
 
                     <div className="col-span-3">
-                        <BoardProgress
-                            taskCount={board.taskCount}
-                            totalTasks={board.totalTasks}
-                        />
+                        <BoardProgress totalTasks={board.totalTasks} />
                     </div>
 
                     <div className="col-span-2 col-start-5">

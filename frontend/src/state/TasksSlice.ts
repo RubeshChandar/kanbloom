@@ -41,9 +41,12 @@ const TasksSlice = createSlice({
             if (action.payload.priority) {
                 task.priority = action.payload.priority
             }
+        },
+        deleteTask: (state, action: PayloadAction<{ id: string }>) => {
+            return state.filter(task => task.task_id !== action.payload.id)
         }
     },
 })
 
 export default TasksSlice.reducer
-export const { clearTasks, setTasks, updateTaskStatus, updateTaskDetails } = TasksSlice.actions
+export const { clearTasks, setTasks, updateTaskStatus, updateTaskDetails, deleteTask } = TasksSlice.actions

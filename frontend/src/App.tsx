@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import RegisterPage from "./pages/RegisterPage";
+import TaskPage from "./pages/TaskPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="/boards/:slug" element={<BoardPage />} />
+          <Route path="/boards/:slug/task" element={<TaskPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 

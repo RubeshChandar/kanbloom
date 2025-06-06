@@ -15,4 +15,5 @@ urlpatterns = [
     path("user-profiles/", views.get_user_profile, {"pk": None}),
     path("user-profiles/<str:pk>/", views.get_user_profile),
     path("board/<str:slug>/", views.BoardUsers.as_view()),
+    path("<str:slug>/handle-users/", views.manage_board_members.as_view()),
 ]

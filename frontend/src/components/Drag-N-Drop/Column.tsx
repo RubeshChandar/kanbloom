@@ -1,4 +1,3 @@
-// If you haven't already, install Framer Motion by running: npm install framer-motion
 import { useDroppable } from "@dnd-kit/core";
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -7,10 +6,17 @@ import '@src/index.css';
 import { ColumnsT } from "@src/types/BoardTypes";
 import { ShortendTask } from "@src/types/TaskTypes";
 import { AnimatePresence, motion } from "framer-motion";
+
+import { useNavigate } from "react-router-dom";
 import TaskCard from "./TaskCard";
 
 const Column = ({ column, tasks }: { column: ColumnsT, tasks: ShortendTask[] }) => {
     const { setNodeRef, isOver } = useDroppable({ id: column.id })
+    const nav = useNavigate()
+
+    const handleAddTask = () => {
+        nav(`task?progress=${column.id}`)
+    }
 
     return (
         <div
@@ -27,6 +33,7 @@ const Column = ({ column, tasks }: { column: ColumnsT, tasks: ShortendTask[] }) 
                     <Button
                         variant="contained"
                         size="small"
+                        onClick={handleAddTask}
                         sx={{
                             minWidth: 0,
                             padding: "4px",
@@ -34,6 +41,7 @@ const Column = ({ column, tasks }: { column: ColumnsT, tasks: ShortendTask[] }) 
                             color: "#181A1B",
                             '&:hover': { bgcolor: "#B6E400" }
                         }}
+
                     >
                         <AddIcon />
                     </Button>
@@ -66,6 +74,7 @@ const Column = ({ column, tasks }: { column: ColumnsT, tasks: ShortendTask[] }) 
                     ))}
                 </AnimatePresence>
             </div>
+
         </div>
     )
 }

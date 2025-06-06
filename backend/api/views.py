@@ -226,3 +226,8 @@ class update_task_status(APIView):
 
         except Exception as e:
             return Response({"error": f"A server error occured {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def delete(self, request, slug, task_id):
+        task = Task.objects.get(id=task_id)
+        task.delete()
+        return Response({"data": f"Successfully deleted {task.name}"}, status=status.HTTP_200_OK)

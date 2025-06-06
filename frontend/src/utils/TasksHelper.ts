@@ -69,3 +69,34 @@ export const updateTaskDetailBackend = async (slug: string, dispatch: Dispatch, 
             }))
         })
 }
+
+export const handleBoardMembers = async (slug: string, userID: string, dispatch: Dispatch, action: "add" | "remove") => {
+    const request =
+        action === "add"
+            ? api.post(`user/${slug}/handle-users/`, { user_id: userID })
+            : api.delete(`user/${slug}/handle-users/`, { params: { user_id: userID } });
+
+    request.then(res => {
+        dispatch(setBoardMembers(res.data));
+    });
+
+}
+
+export const deleteTaskBackend = async (slug: string, taskID: string, dispatch: Dispatch) => {
+    api.delete(`/api/${slug}/tasks/update-status/${taskID}`)
+        .then(res => {
+            if (res.status === 200) {
+                dispatch(showSnackbar({
+                    message: res.data['data'],
+                    severity: "success",
+                }))
+            }
+        })
+        .catch(error => {
+            dispatch(showSnackbar({
+                message: "Error Occured check console",
+                severity: "error",
+            }))
+            console.log(error)
+        })
+}

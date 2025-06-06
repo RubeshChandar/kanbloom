@@ -4,9 +4,12 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
+import { RootState } from '@src/state/store';
 import { ShortendUser } from '@src/types/UserProfile';
+import { useSelector } from 'react-redux';
 
-const BoardMembers = ({ owner, members }: { owner: ShortendUser, members: ShortendUser[] }) => {
+const BoardMembers = ({ owner }: { owner: ShortendUser }) => {
+    const members = useSelector((state: RootState) => state.boardMembers)
     return (
         <div className='flex flex-col items-center p-4 border bg-white/10 border-white/20 rounded-xl h-80'>
             <h3 className="mb-3 text-lg font-semibold text-neon">TEAM MEMBERS</h3>
