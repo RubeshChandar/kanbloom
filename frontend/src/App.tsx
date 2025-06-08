@@ -23,6 +23,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="/boards/:slug" element={<BoardPage />} />
           <Route path="/boards/:slug/task" element={<TaskPage />} />
+          <Route path="/boards/:slug/task/:taskId" element={<TaskPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 

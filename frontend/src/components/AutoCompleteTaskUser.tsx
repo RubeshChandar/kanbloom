@@ -3,13 +3,14 @@ import { getFieldStyles } from "@src/styles/CustomStyleMUI";
 import { ShortendUser } from "@src/types/UserProfile";
 
 type InputProps = {
+    name: string,
     users: ShortendUser[],
     value: ShortendUser | undefined,
     error?: boolean,
     onChange: (user: ShortendUser | null) => void,
 }
 
-const AutoCompleteTaskUser = ({ users, value, onChange, error }: InputProps) => {
+const AutoCompleteTaskUser = ({ name, users, value, onChange, error }: InputProps) => {
     return (
         <Autocomplete
             options={users}
@@ -31,7 +32,7 @@ const AutoCompleteTaskUser = ({ users, value, onChange, error }: InputProps) => 
             renderInput={(params) =>
                 <TextField
                     {...params}
-                    label="Reported By"
+                    label={name}
                     variant="outlined"
                     sx={getFieldStyles}
                     error={!!error}

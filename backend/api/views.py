@@ -165,7 +165,7 @@ class tasks(generics.ListAPIView):
         slug = self.kwargs['slug']
         return Task.objects.filter(board__slug=slug)
 
-    def list(self, request, slug):
+    def list(self, request, slug, task_id=None):
         only_status = request.query_params.get("only")
 
         if only_status:
@@ -175,6 +175,10 @@ class tasks(generics.ListAPIView):
                 context={'request': request}
             )
 
+        if task_id:
+            serializer = TasksSerializer(self.get_queryset().get(
+                id=task_id),  context={'request': request})
+
         else:
             serializer = ShortendTaskSerializer(
                 self.get_queryset(), many=True,
@@ -183,6 +187,36 @@ class tasks(generics.ListAPIView):
 
         print("List of tasks -> ", len(connection.queries))
         return Response(serializer.data)
+
+    def post(self, request, slug, task_id=None):
+        board = Board.objects.get(slug=slug)
+        data = request.data.copy()
+
+        data['board'] = board.id
+
+        assigned_to = request.data.get("assigned_to")
+        data["assigned_to_id"] = assigned_to["id"] if assigned_to else None
+
+        reported_by = request.data.get("reported_by")
+        data["reported_by_id"] = reported_by["id"] if reported_by else request.user.id
+
+        if task_id:
+            task = Task.objects.get(id=task_id)
+            serialised_object = TasksSerializer(
+                instance=task, data=data, partial=True, context={"request": request},)
+
+        else:
+            serialised_object = TasksSerializer(data=data)
+
+        if serialised_object.is_valid():
+            serialised_object.save()
+            return Response({"data": "Updated the task"})
+
+        print(serialised_object.errors)
+        return Response(
+            {"error": serialised_object.errors},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 class update_task_status(APIView):

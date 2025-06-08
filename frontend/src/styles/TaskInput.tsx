@@ -38,6 +38,7 @@ const TaskInput = forwardRef<HTMLInputElement, InputProps>(
                     multiline={multiline}
                     rows={multiline ? 4 : undefined}
                     error={!!errorMessage}
+                    InputLabelProps={{ shrink: true }}
                     {...rest}
                 />
                 <AnimatePresence>

@@ -7,16 +7,15 @@ import { deleteTaskBackend, fetchTasksAndUsers, updateTaskStatusBackend } from "
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Column from "./Column";
-import DeleteZone from "./DeleteZone";
+import DropZones from "./DropZones";
 import TaskCard from "./TaskCard";
-
-
 
 const DnD = ({ slug }: { slug: string }) => {
     const dispatch = useDispatch()
     const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
-
+    const nav = useNavigate()
     const Columns: ColumnsT[] = [
         { id: TaskStatus.TO_DO, title: TaskStatusLabel.TODO, color: "border-blue-400", hoverColor: "ring-2 ring-blue-400 shadow-blue-200/30" },
         { id: TaskStatus.IN_PROGRESS, title: TaskStatusLabel.INPROGRESS, color: "border-yellow-400", hoverColor: "ring-2 ring-yellow-400 shadow-yellow-200/30" },
@@ -38,11 +37,23 @@ const DnD = ({ slug }: { slug: string }) => {
         const { active, over } = event;
 
         if (!over) return
+
+        if (over.id === "view-detail") {
+            nav(`task/${active.id}`)
+            return
+        }
+
+        if (over.id === "archive") {
+            console.log("archive")
+            return
+        }
+
         if (over.id === "delete") {
             dispatch(deleteTask({ id: active.id as string }))
             deleteTaskBackend(slug, active.id as string, dispatch)
             return
         }
+
 
         dispatch(updateTaskStatus({ task_id: active.id as string, status: over.id as TaskStatus }))
         setActiveId(null)
@@ -96,7 +107,7 @@ const DnD = ({ slug }: { slug: string }) => {
                 </DragOverlay>
             </div>
 
-            <DeleteZone />
+            <DropZones />
 
         </DndContext >
 
