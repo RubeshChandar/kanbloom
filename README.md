@@ -1,6 +1,6 @@
-# 🌿 Kanbloom
+# 🌿 Kanbloom v1.2.3
 
-**Kanbloom** is a modern, fullstack Kanban board app inspired by Trello, built with **React + Redux Toolkit** on the frontend and **Django + Django REST Framework** on the backend. It helps individuals and teams manage tasks, collaborate, and visualize progress using a clean and responsive UI. The project uses Docker with persistent volumes and PostgreSQL for database persistence.
+**Kanbloom** is a modern, fullstack Kanban board app inspired by Trello, built with **React + Redux Toolkit** on the frontend and **Django + Django REST Framework** on the backend. Now at version **1.2.3**, Kanbloom delivers a stable, production-ready foundation for collaborative task management, with scalable architecture and responsive UI.
 
 ---
 
@@ -12,15 +12,19 @@
 - ✅ Create boards, lists, and cards
 - ✅ Drag and drop cards across lists
 - ✅ Assign cards to users
-- ✅ Comment on tasks
 - ✅ Upload user profile pictures (Material UI Avatar)
-- ✅ “Connection Requests” system using Redis
 - ✅ Separate views for recent and all boards
 - ✅ Simple task status flow: `To Do → In Process → Blocked → Done`
 - ✅ Full-featured REST API with modular Django apps (board, task, etc.), with all API URLs defined in `backend/api/urls.py`.
 - ✅ Default filtering via custom model managers (`objects.all()` returns only active items, e.g. Board with `is_active=True`).
 - ✅ Pretty URLs using slugs for boards and tasks.
 - ✅ Dockerized for easy local and production use, with persistent volumes for Postgres, static, and media files.
+
+### 📦 Version 1.2.3 Highlights
+
+- Reworked serializer logic to support both UUID and nested object input for user fields.
+- Added dual-field strategy (`assigned_to_id` and `assigned_to`) to cleanly separate input/output handling.
+- Improved error handling and validation in task update flows.
 
 ### 🛠️ Planned / Upcoming Features
 
@@ -51,7 +55,6 @@
 - Django REST Framework
 - SimpleJWT (Auth)
 - PostgreSQL
-- Redis (for ephemeral connection requests)
 - Centralized API URLs in `backend/api/urls.py`
 
 ---
@@ -83,8 +86,6 @@ Kanbloom/
 ├── .env # Environment variables for both backend and frontend
 ├── docker-compose.yml
 └── README.md
-
-
 ```
 
 > API URLs are centralized in `backend/api/urls.py`. Model managers control default filtering to return only active items by default.

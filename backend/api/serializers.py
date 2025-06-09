@@ -48,7 +48,7 @@ class TasksSerializer(TaskTransformerMixin, serializers.ModelSerializer):
         queryset=User.objects.all(), source='reported_by', write_only=True, required=False
     )
 
-    #  This method works however the above is very simple
+    # This method works however the above is very simple
     # def update(self, instance, validated_data):
     #     request = self.context.get('request')
     #     user = request.user if request else None
