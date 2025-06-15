@@ -24,7 +24,6 @@ class get_boards(APIView):
 
     def get(self, request, slug=None):
         user = request.user
-
         if slug:
             qset = user.member_boards.filter(slug=slug)
         else:
@@ -67,6 +66,12 @@ class get_boards(APIView):
 class board(APIView):
     permission_classes = [IsAuthenticated, IsBoardMember]
 
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            # Only authenticated users can create boards
+            return [IsAuthenticated()]
+        return super().get_permissions()
+
     def get_new_slug(self, name):
         base_slug = slugify(name)
         slug = base_slug
@@ -84,7 +89,7 @@ class board(APIView):
 
         board = Board.objects.filter(slug=slug).first()
 
-        if board.owned_by != request.data:
+        if board.owned_by != request.user:
             return Response(
                 {'data': "You don't own the board to make change"},
                 status=status.HTTP_401_UNAUTHORIZED

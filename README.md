@@ -99,7 +99,7 @@ Kanbloom/
 If you have Docker and Docker Compose installed, you can start the entire app with:
 
 ```bash
-docker-compose up --build
+compose_bake=1 docker compose up --build
 ```
 
 Then access:

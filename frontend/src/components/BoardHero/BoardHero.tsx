@@ -33,7 +33,7 @@ const BoardHero = ({ slug }: { slug: string }) => {
 
     useEffect(() => {
         setIsLoading(true)
-        api.get(`/api/boards/${slug}`)
+        api.get(`/api/boards/${slug}/`)
             .then((res: { data: Board }) => {
                 setIsOwned(currentUser?.user.id === res.data.owned_by.id)
                 return setboard(res.data)
@@ -52,7 +52,7 @@ const BoardHero = ({ slug }: { slug: string }) => {
 
     const deleteBoard = async () => {
         try {
-            const res = await api.delete(`/api/boards/delete/${board.slug}`)
+            const res = await api.delete(`/api/boards/delete/${board.slug}/`)
             dispatch(
                 showSnackbar({
                     message: res.data['data'],

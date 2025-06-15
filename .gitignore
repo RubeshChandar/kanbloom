@@ -37,6 +37,7 @@ frontend/dist/
 frontend/build/
 frontend/.cache/
 backend/staticfiles/
+backend/dist/
 
 # Editor files
 .vscode/
@@ -53,6 +54,7 @@ coverage/
 *.cover
 *.pytest_cache/
 htmlcov/
+prod/
 
 # TypeScript / JS
 *.tsbuildinfo

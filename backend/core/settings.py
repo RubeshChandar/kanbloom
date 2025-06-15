@@ -10,8 +10,8 @@ load_dotenv(BASE_DIR.parent / ".env")
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = os.getenv("DEBUG")
-
+# DEBUG = os.getenv("DEBUG")
+DEBUG = False
 print(f'Your debug is set to {os.getenv("DEBUG")}')
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
@@ -80,14 +80,13 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 
 DATABASES = {
-
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": "db",
-        "PORT": os.getenv("POSTGRES_PORT", 5432),
+        "HOST": os.getenv("POSTGRES_HOST"),
+        "PORT": os.getenv("POSTGRES_PORT", "5433"),
     }
 }
 
@@ -127,3 +126,4 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR.parent / "media"
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:8000"]
+CORS_ALLOW_ALL_ORIGINS = True

@@ -1,24 +1,6 @@
 name: Kanbloom
 
 services:
-  db:
-    image: postgres
-    container_name: db-kanbloom
-    ports:
-      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
-    restart: unless-stopped
-    env_file:
-      - .env
-    volumes:
-      - ./db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
-
-
   frontend:
     build: ./frontend
     container_name: react-kanbloom
@@ -43,9 +25,10 @@ services:
     volumes:
       - ./backend:/app
       - ./media:/media
+      - static:/static
     env_file:
       - .env
-    depends_on:
-      db:
-        condition: service_healthy
-        restart: true
+
+volumes:
+  dist:
+  static:

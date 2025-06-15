@@ -5,6 +5,7 @@ import MainLayout from "./layouts/MainLayout";
 import BoardPage from "./pages/BoardPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
 import RegisterPage from "./pages/RegisterPage";
 import TaskPage from "./pages/TaskPage";
@@ -27,6 +28,7 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
       <GlobalSnackBar />
